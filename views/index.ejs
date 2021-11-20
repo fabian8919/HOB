@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <%- include('../public/assets/const/head'); %>
+</head>
+
+<body>
+
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+
+    <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
+
+        <%- include('../public/assets/const/nav'); %>
+   
+        <%- include('../public/assets/const/sidebar'); %>
+
+        <div id="contentPage" class="page-wrapper">
+           
+        </div>
+    </div>
+    <%- include('../public/assets/const/footer'); %>
+</body>
+
+</html>
