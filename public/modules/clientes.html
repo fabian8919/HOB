@@ -45,6 +45,7 @@
     </div>
 </div>
 
+<form id="form-clientes" method="post" action="/clientes/">
 <div id="modalClientes" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalClientesLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -53,40 +54,39 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body">
-                <form id="form-clientes" enctype="multipart/form-data">
                     <div id="modal-body-sm" class="modal-body">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" id="Clientes-nit" name="Clientes-nit" placeholder="NIT" required>
+                                    <input class="form-control" type="number" id="Clientes_nit" name="Clientes_nit" placeholder="NIT" required>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" id="Clientes-razon_social" name="Clientes-razon_social" placeholder="Razón Social" required>
+                                    <input class="form-control" type="text" id="Clientes_razon_social" name="Clientes_razon_social" placeholder="Razón Social" required>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" id="Clientes-correo" name="Clientes-correo" placeholder="Correo Electrónico" required>
+                                    <input class="form-control" type="email" id="Clientes_correo" name="Clientes_correo" placeholder="Correo Electrónico" required>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" id="Clientes-direccion" name="Clientes-direccion" placeholder="Dirección" >
+                                    <input class="form-control" type="text" id="Clientes_direccion" name="Clientes_direccion" placeholder="Dirección" >
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" id="Clientes-telefono" name="Clientes-telefono" placeholder="Teléfono" >
+                                    <input class="form-control" type="text" id="Clientes_telefono" name="Clientes_telefono" placeholder="Teléfono" >
                                 </div>
                             </div>
                             <div class="col-md-12 text-right">
                                 <div class="form-group">
                                     <div class="form-check form-check-inline">
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="Clientes-activo">
-                                            <label class="custom-control-label" for="Clientes-activo">Activo</label>
+                                            <input type="checkbox" class="custom-control-input" id="Clientes_activo" name="Clientes_activo" checked>
+                                            <label class="custom-control-label" for="Clientes_activo">Activo</label>
                                         </div>
                                     </div> 
                                 </div>
@@ -96,10 +96,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    <input type="submit" value="Guardar Cambios" class="btn btn-primary"/>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
-</div>
+</form>
 <script src="js/clientes.js"></script>
