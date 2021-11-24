@@ -39,7 +39,7 @@ var _Clientes = (function () {
                 console.log(data);
                 var optHerramientas;
                 $.each(data,function(i,e){
-                    optHerramientas = '<a href="#" onclick="mostrarModalEditarCategoria('+e.id+')" id="editarCategoria'+e.id+'" data-toggle="tooltip" data-placement="left" data-original-title="Editar Registro"><span class="btn btn-warning btn-sm"><i class="far fa-edit fa-lg"></i></span></a>  ';
+                    optHerramientas = '<a href="#" onclick="_Clientes.mostrarModalEditarCliente('+e.id+')" ><span class="btn btn-warning btn-sm"><i class="far fa-edit fa-lg"></i></span></a>  ';
                     optHerramientas += '<a href="#" onclick="mostrarModalDeleteCategoria('+e.id+')" id="deleteCategoria'+e.id+'" data-toggle="tooltip" data-placement="right" data-original-title="Eliminar Registro"><span class="btn btn-danger btn-sm"><i class="far fa-times-circle fa-lg"></i></span></a>';
                     TableClientes.row.add([
                         optHerramientas,
@@ -53,12 +53,39 @@ var _Clientes = (function () {
                         e.activo
                     ]);
                 });
-                console.log(TableClientes.rows);
                 TableClientes.draw();
             }
             
         });
         
+    }
+
+    var mostrarModalEditarCliente = (id) =>{        
+        $.ajax({
+            type:"POST",
+            url: "/clientes/extraerDataId/",
+            data:{
+                "id":id
+            },
+            beforeSend: function(){
+            },
+            success:function(r){
+                var data = JSON.parse(r);
+                if(data){
+                    $("#Clientes_nit").val(data[0].nit);
+                    $("#Clientes_razon_social").val(data[0].razon_social);
+                    $("#Clientes_correo").val(data[0].correo);
+                    $("#Clientes_direccion").val(data[0].direccion);
+                    $("#Clientes_telefono").val(data[0].telefono);
+                    if(data[0].activo){
+                        $("#Clientes_activo").prop('checked', true);
+                    }else{
+                        $("#Clientes_activo").prop('checked', false);
+                    }
+                    $("#modalClientes").modal("show");
+                }
+            }
+        });    
     }
 
     var clientes = () => {
@@ -73,13 +100,15 @@ var _Clientes = (function () {
                 //$('#preload').show();
             },
             success: function (r) { 
-                console.log(r);
+                _Clientes.drawTable()
+                // console.log(r);
             }  
         });
     }
 
     return {
         clientes:clientes,
+        mostrarModalEditarCliente:mostrarModalEditarCliente,
         drawTable:drawTable
     }
     

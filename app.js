@@ -29,6 +29,7 @@ app.use(express.static(__dirname + '/public'));
 /* Requiriendo archivos para usar */
 app.use('/', require('./controller/router'));
 app.use('/', require('./controller/clientes'));
+app.use('/', require('./controller/permisos'));
 
 /* Levantando el servidor */
 app.listen(process.env.PORT, () => {
