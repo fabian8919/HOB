@@ -9,7 +9,8 @@
                     <div class="row">
                         <div class="col-lg-6 mb-4">
                             <div class="btn-list">
-                                <button type="button" class="btn btn-success btn-rounded"><i class="fas fa-plus"></i> Crear Usuario</button>                         
+                                <button type="button" class="btn btn-success btn-rounded" data-toggle="modal"
+                                data-target="#modalUsuarios"><i class="fas fa-plus"></i> Crear Usuario</button>                         
                                 <button type="button" class="btn btn-danger btn-rounded"><i class="fas fa-address-book"></i> Asociar Usuario a Cliente</button>                         
                                 <button type="button" class="btn btn-warning btn-rounded"><i class="fas fa-book"></i> Asociar Modulos</button>                         
                                 <button type="button" class="btn btn-info btn-rounded"><i class="fas fa-registered"></i> Asociar Permisos</button>                         
@@ -47,5 +48,64 @@
         </div>
     </div>
 </div>
+
+<form id="form-usuarios" method="post" action="/usuarios/">
+    <div id="modalUsuarios" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalUsuariosLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header modal-colored-header bg-primary">
+                    <h4 class="modal-title" id="modalUsuariosLabel">Clientes</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                        <div id="modal-body-sm" class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input class="form-control" type="number" id="cedula" name="cedula" placeholder="Cedula" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" id="nombre" name="nombre" placeholder="Nombre" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input class="form-control" type="email" id="correo" name="correo" placeholder="Correo Electrónico" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input class="form-control" type="password" id="contrasena" name="contrasena" placeholder="Contraseña" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-right">
+                                    <div class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="activo" name="activo" checked>
+                                                <label class="custom-control-label" for="activo">Activo</label>
+                                            </div>
+                                        </div> 
+                                        <div class="form-check form-check-inline">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="bloqueado" name="bloqueado">
+                                                <label class="custom-control-label" for="bloqueado">Bloqueado</label>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button>
+                        <input type="submit" value="Guardar Cambios" class="btn btn-primary"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 
 <script src="js/usuarios.js"></script>
