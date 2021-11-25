@@ -34,32 +34,30 @@ db.authenticate()
     });
 
 var fns = module.exports = {
-    clientes: async function (data) {
-        log(yellow("Ingresa: clientes"));
+    modulos: async function (data) {
         return new Promise(
             (resolve, reject) => {
-                var activo = (data.Clientes_activo == "on") ? true : false;
-                db.query(process.env.DATEBASE_ENCODING + "SELECT * FROM clientes WHERE nit = ?", {
-                    replacements: [data.Clientes_nit]
-                }).then(([clienteData]) => {
-                    if(_.size(clienteData) <= 0){
-                        db.query(process.env.DATEBASE_ENCODING + "INSERT INTO clientes(nit, razon_social, activo, telefono, direccion, correo) VALUES (?, ?, ?, ?, ?, ?) RETURNING id", {
-                            replacements: [data.Clientes_nit, data.Clientes_razon_social, activo, data.Clientes_telefono, data.Clientes_direccion, data.Clientes_correo]
-                        }).then(([insertCliente]) => {
-                            if(_.size(insertCliente) == 1){
+                db.query(process.env.DATEBASE_ENCODING + "SELECT * FROM permisos_modulos WHERE id_modulo = ?", {
+                    replacements: [data.Modulos_id]
+                }).then(([modulosData]) => {
+                    if(_.size(modulosData) <= 0){
+                        db.query(process.env.DATEBASE_ENCODING + "INSERT INTO permisos_modulos(id_modulo, nombre_modulo) VALUES (?, ?) RETURNING id", {
+                            replacements: [data.Modulos_id, data.Modulos_nombre]
+                        }).then(([insertModulo]) => {
+                            if(_.size(insertModulo) == 1){
                                 resolve(true);
                             } else {
                                 resolve(false);
                             }
                         }); 
                     } else {
-                        db.query(process.env.DATEBASE_ENCODING + "UPDATE clientes SET razon_social = ?, activo = ? , telefono = ?, direccion = ?, correo = ? WHERE nit = ? RETURNING id", {
-                            replacements: [data.Clientes_razon_social, activo, data.Clientes_telefono, data.Clientes_direccion, data.Clientes_correo, data.Clientes_nit]
-                        }).then(([insertCliente]) => {
-                            if(_.size(insertCliente) == 1){
+                        db.query(process.env.DATEBASE_ENCODING + "UPDATE permisos_modulos SET id_modulo = ?, nombre_modulo = ? WHERE id_modulo = ? RETURNING id", {
+                            replacements: [data.Modulos_id, data.Modulos_nombre, data.Modulos_id]
+                        }).then(([updateModulo]) => {
+                            if(_.size(updateModulo) == 1){
                                 resolve('actualizado');
                             } else {
-                                resolve('noactualizo');
+                                resolve('noactualiza');
                             }
                         }); 
                     }
@@ -69,15 +67,14 @@ var fns = module.exports = {
         );
     },
 
-    clientesExtraer: async function () {
-        log(yellow("Ingresa: clientesExtraer"));
+    modulosExtraer: async function () {
         return new Promise(
             (resolve, reject) => {
-                db.query(process.env.DATEBASE_ENCODING + "SELECT * FROM clientes", {
+                db.query(process.env.DATEBASE_ENCODING + "SELECT * FROM permisos_modulos ORDER BY id", {
                     replacements: []
-                }).then(([clienteData]) => {
-                    if(_.size(clienteData) > 0){
-                        resolve(clienteData)
+                }).then(([modulosData]) => {
+                    if(_.size(modulosData) > 0){
+                        resolve(modulosData)
                     } else {
                         resolve(false)
                     }
@@ -86,14 +83,14 @@ var fns = module.exports = {
         );
     },
 
-    clientesExtraerId: async function (data) {
+    modulosExtraerId: async function (data) {
         return new Promise(
             (resolve, reject) => {
-                db.query(process.env.DATEBASE_ENCODING + "SELECT * FROM clientes WHERE id = ?", {
+                db.query(process.env.DATEBASE_ENCODING + "SELECT * FROM permisos_modulos WHERE id = ?", {
                     replacements: [data.id]
-                }).then(([clientesData]) => {
-                    if(_.size(clientesData) > 0){
-                        resolve(clientesData)
+                }).then(([modulosData]) => {
+                    if(_.size(modulosData) > 0){
+                        resolve(modulosData)
                     } else {
                         resolve(false)
                     }

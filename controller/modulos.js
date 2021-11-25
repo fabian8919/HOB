@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const app = express();
 const session = require("express-session");
-const fns = require("../models/clientes");
+const fns = require("../models/modulos");
 
 /* Conectando el servidor a las sesiones */
 app.use(session({
@@ -12,23 +12,23 @@ app.use(session({
     resave: false,
 }));
 
-router.post('/clientes/', (req, res) => {
+router.post('/modulos/', (req, res) => {
     (async ()=>{
-        let resp = await fns.clientes(req.body);
+        let resp = await fns.modulos(req.body);
         res.send(JSON.stringify(resp));
     })();
 });
 
-router.post('/clientes/extraerData', (req, res) => {
+router.post('/modulos/extraerData/', (req, res) => {
     (async ()=>{
-        let resp = await fns.clientesExtraer();
+        let resp = await fns.modulosExtraer();
         res.send(JSON.stringify(resp));
     })();
 });
 
-router.post('/clientes/extraerDataId/', (req, res) => {
+router.post('/modulos/extraerDataId/', (req, res) => {
     (async ()=>{
-        let resp = await fns.clientesExtraerId(req.body);
+        let resp = await fns.modulosExtraerId(req.body);
         res.send(JSON.stringify(resp));
     })();
 });
