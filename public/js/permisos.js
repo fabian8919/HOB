@@ -57,8 +57,6 @@ var _Permisos = (function () {
             success:function(r){
                 var data = JSON.parse(r);
                 if(data){
-                    console.log(r)
-                    $("#Permisos_update").val(data[0].id);
                     $("#Permisos_id").val(data[0].id_permiso);
                     $("#Permisos_nombre").val(data[0].nombre);
                     $("#modalPermisos").modal("show");

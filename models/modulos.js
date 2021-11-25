@@ -34,27 +34,27 @@ db.authenticate()
     });
 
 var fns = module.exports = {
-    permisos: async function (data) {
+    modulos: async function (data) {
         return new Promise(
             (resolve, reject) => {
-                db.query(process.env.DATEBASE_ENCODING + "SELECT * FROM permisos_acciones WHERE id_permiso = ?", {
-                    replacements: [data.Permisos_id]
-                }).then(([permisosData]) => {
-                    if(_.size(permisosData) <= 0){
-                        db.query(process.env.DATEBASE_ENCODING + "INSERT INTO permisos_acciones(id_permiso, nombre) VALUES (?, ?) RETURNING id", {
-                            replacements: [data.Permisos_id, data.Permisos_nombre]
-                        }).then(([insertPermiso]) => {
-                            if(_.size(insertPermiso) == 1){
+                db.query(process.env.DATEBASE_ENCODING + "SELECT * FROM permisos_modulos WHERE id_modulo = ?", {
+                    replacements: [data.Modulos_id]
+                }).then(([modulosData]) => {
+                    if(_.size(modulosData) <= 0){
+                        db.query(process.env.DATEBASE_ENCODING + "INSERT INTO permisos_modulos(id_modulo, nombre_modulo) VALUES (?, ?) RETURNING id", {
+                            replacements: [data.Modulos_id, data.Modulos_nombre]
+                        }).then(([insertModulo]) => {
+                            if(_.size(insertModulo) == 1){
                                 resolve(true);
                             } else {
                                 resolve(false);
                             }
                         }); 
                     } else {
-                        db.query(process.env.DATEBASE_ENCODING + "UPDATE permisos_acciones SET id_permiso = ?, nombre = ? WHERE id_permiso = ? RETURNING id", {
-                            replacements: [data.Permisos_id, data.Permisos_nombre, data.Permisos_id]
-                        }).then(([insertPermiso]) => {
-                            if(_.size(insertPermiso) == 1){
+                        db.query(process.env.DATEBASE_ENCODING + "UPDATE permisos_modulos SET id_modulo = ?, nombre_modulo = ? WHERE id_modulo = ? RETURNING id", {
+                            replacements: [data.Modulos_id, data.Modulos_nombre, data.Modulos_id]
+                        }).then(([updateModulo]) => {
+                            if(_.size(updateModulo) == 1){
                                 resolve('actualizado');
                             } else {
                                 resolve('noactualiza');
@@ -67,14 +67,14 @@ var fns = module.exports = {
         );
     },
 
-    permisosExtraer: async function () {
+    modulosExtraer: async function () {
         return new Promise(
             (resolve, reject) => {
-                db.query(process.env.DATEBASE_ENCODING + "SELECT * FROM permisos_acciones ORDER BY id", {
+                db.query(process.env.DATEBASE_ENCODING + "SELECT * FROM permisos_modulos ORDER BY id", {
                     replacements: []
-                }).then(([permisosData]) => {
-                    if(_.size(permisosData) > 0){
-                        resolve(permisosData)
+                }).then(([modulosData]) => {
+                    if(_.size(modulosData) > 0){
+                        resolve(modulosData)
                     } else {
                         resolve(false)
                     }
@@ -83,14 +83,14 @@ var fns = module.exports = {
         );
     },
 
-    permisosExtraerId: async function (data) {
+    modulosExtraerId: async function (data) {
         return new Promise(
             (resolve, reject) => {
-                db.query(process.env.DATEBASE_ENCODING + "SELECT * FROM permisos_acciones WHERE id = ?", {
+                db.query(process.env.DATEBASE_ENCODING + "SELECT * FROM permisos_modulos WHERE id = ?", {
                     replacements: [data.id]
-                }).then(([permisosData]) => {
-                    if(_.size(permisosData) > 0){
-                        resolve(permisosData)
+                }).then(([modulosData]) => {
+                    if(_.size(modulosData) > 0){
+                        resolve(modulosData)
                     } else {
                         resolve(false)
                     }

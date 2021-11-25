@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-body">                
+                <div class="card-body">
                     <div class="row">
                         <div class="col-lg-12">
                             <button type="button" class="btn btn-success btn-rounded" data-toggle="modal"
@@ -39,7 +39,8 @@
     </div>
 </div>
 <form id="form-permisos" method="post" action="/permisos/">
-    <div id="modalPermisos" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalPermisosLabel" aria-hidden="true">
+    <div id="modalPermisos" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalPermisosLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header modal-colored-header bg-primary">
@@ -47,28 +48,29 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
-                        <div id="modal-body-sm" class="modal-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text" id="Permisos_id" name="Permisos_id" placeholder="ID" required>
-                                    </div>
+                    <div id="modal-body-sm" class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" id="Permisos_id" name="Permisos_id"
+                                        placeholder="ID" required>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text" id="Permisos_nombre" name="Permisos_nombre" placeholder="Nombre" required>
-                                    </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" id="Permisos_nombre" name="Permisos_nombre"
+                                        placeholder="Nombre" required>
                                 </div>
                             </div>
                         </div>
-                        <input type="hidden" id="Permisos_update" name="Permisos_update">
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button>
-                        <input type="submit" value="Guardar Cambios" class="btn btn-primary"/>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button>
+                    <input type="submit" value="Guardar Cambios" class="btn btn-primary" />
                 </div>
             </div>
         </div>
-    </form>
+    </div>
+</form>
 <script src="js/permisos.js"></script>

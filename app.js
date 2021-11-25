@@ -30,6 +30,7 @@ app.use(express.static(__dirname + '/public'));
 app.use('/', require('./controller/router'));
 app.use('/', require('./controller/clientes'));
 app.use('/', require('./controller/permisos'));
+app.use('/', require('./controller/modulos'));
 
 /* Levantando el servidor */
 app.listen(process.env.PORT, () => {
