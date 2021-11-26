@@ -20,7 +20,7 @@ var _Usuarios = (function () {
         ordering: true,
         paging: true,
         destroy: true,
-        pageLength: 10,
+        pageLength: 7,
         columns: _columnsUsu,
         order: [[1, 'asc']]
     });
@@ -75,13 +75,12 @@ var _Usuarios = (function () {
                 $('#cedula').val('');
                 $('#nombre').val('');
                 $('#correo').val('');
-                Swal.close();
+                $('#modalUsuarios').modal('hide');
                 if (r) {
                     _Globals.alertProcess("success", "Bien!", "El proceso fue exitoso.");
                 } else {
                     _Globals.alertProcess("error", "Error!", "El proceso ha fallado.");
                 }
-                $('#modalUsuarios').modal('hide');
                 _Usuarios.drawTable();
             }
         });
@@ -118,44 +117,49 @@ var _Usuarios = (function () {
             icon: 'question',
             title: 'Para eliminar el usuario debe ingresar su contraseña',
             input: 'text',
+            input: 'password',
             inputAttributes: {
-                autocapitalize: 'off'
+                autocapitalize: 'off',
+                maxlength: 50
             },
             showCancelButton: true,
             cancelButtonText: 'Cancelar',
             confirmButtonText: 'Confirmar',
             showLoaderOnConfirm: true,
             preConfirm: (pass) => {
-                if(!pass){
+                if (!pass) {
                     Swal.showValidationMessage(
                         "La contraseña no puede estar vacia."
                     )
                 } else {
-                    
-                }                
+                    $.ajax({
+                        type: "POST",
+                        url: "/usuarios/ValidarContrasena/",
+                        data: { "contrasena": pass, "cedula": "4514989", "id": id },
+                        success: function (r) {
+                            if (!r) {
+                                _Globals.NotifyError("La contraseña es incorrecta.");
+                            } else {
+                                _Usuarios.drawTable();
+                                _Globals.alertProcess("success", "Bien!", "El usuario se eliminó con exito.");
+                            }
+                        }
+                    });
+                }
             },
             allowOutsideClick: () => !Swal.isLoading()
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire({
-                    title: `${result.value.login}'s avatar`,
-                    imageUrl: result.value.avatar_url
-                })
-            }
-        })
+        });
     }
 
-    var validarDuplicado = (cedula)=>{
+    var validarDuplicado = (cedula) => {
         $.ajax({
             type: "POST",
             url: "/usuarios/DuplicadoCedula/",
             data: { "cedula": cedula },
             success: function (r) {
-              if(r){
-                
-              } else {
-
-              }
+                if (!r) {
+                    _Globals.NotifyInfo("El usuario ya existe, los datos que ingrese actualizarán el usuario.");
+                }
             }
         });
     }
@@ -165,7 +169,7 @@ var _Usuarios = (function () {
         drawTable: drawTable,
         editarUsuario: editarUsuario,
         eliminarUsuario: eliminarUsuario,
-        validarDuplicado:validarDuplicado
+        validarDuplicado: validarDuplicado
     }
 
 })(jQuery);
@@ -176,16 +180,18 @@ $(document).ready(function () {
         e.preventDefault();
         _Usuarios.usuarios();
     });
-    
-    $('#modalUsuariosButton').on('click', ()=>{
+
+    $('#modalUsuariosButton').on('click', () => {
         $('#contrasena').val('');
         $('#cedula').val('');
         $('#nombre').val('');
         $('#correo').val('');
     });
 
-    $('#cedula').on('blur',()=>{
-        _Usuarios.validarDuplicado($('#cedula').val());
+    $('#cedula').on('blur', () => {
+        if ($('#cedula').val() != "") {
+            _Usuarios.validarDuplicado($('#cedula').val());
+        }
     });
 
 });

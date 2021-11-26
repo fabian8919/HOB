@@ -13,30 +13,37 @@ app.use(session({
 }));
 
 router.post('/usuarios/', (req, res) => {
-    (async ()=>{
+    (async () => {
         let resp = await fns.usuarios(req.body);
-        res.send(JSON.stringify(resp));
+        res.send(resp);
     })();
 });
 
 router.post('/usuarios/extraerData', (req, res) => {
-    (async ()=>{
+    (async () => {
         let resp = await fns.usuariosExtraer();
         res.send(JSON.stringify(resp));
     })();
 });
 
 router.post('/usuarios/ExtraerId', (req, res) => {
-    (async ()=>{
+    (async () => {
         let resp = await fns.usuariosExtraerId(req.body);
         res.send(JSON.stringify(resp));
     })();
 });
 
 router.post('/usuarios/DuplicadoCedula', (req, res) => {
-    (async ()=>{
+    (async () => {
         let resp = await fns.usuariosDuplicadoCedula(req.body);
-        res.send(JSON.stringify(resp));
+        res.send(resp);
+    })();
+});
+
+router.post('/usuarios/ValidarContrasena', (req, res) => {
+    (async () => {
+        let resp = await fns.usuariosValidarContrasena(req.body);
+        res.send(resp);
     })();
 });
 

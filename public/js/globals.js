@@ -1,6 +1,6 @@
 var _Globals = (function () {
 
-    var alertProcess = (icon, tittle, msg)=>{
+    var alertProcess = (icon, tittle, msg) => {
         Swal.fire({
             icon: icon,
             title: tittle,
@@ -17,11 +17,21 @@ var _Globals = (function () {
         });
     }
 
-    return {
-        alertProcess:alertProcess,
-        alertWait:alertWait
+    var NotifyInfo = (text) => {
+        Notify(text);
     }
-    
+
+    var NotifyError = (text) => {
+        Notify(text, null, null, 'danger');
+    }
+
+    return {
+        alertProcess: alertProcess,
+        alertWait: alertWait,
+        NotifyInfo: NotifyInfo,
+        NotifyError: NotifyError
+    }
+
 })(jQuery);
 
 $(document).ready(function () {
