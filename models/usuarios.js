@@ -86,4 +86,20 @@ var fns = module.exports = {
             }
         );
     },
+    usuariosDuplicadoCedula: async function (data) {
+        log(yellow("Ingresa: usuariosDuplicadoCedula"));
+        return new Promise(
+            (resolve, reject) => {
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios WHERE cedula = ?", {
+                    replacements: [data.cedula]
+                }).then(([clienteData]) => {
+                    if(_.size(clienteData) >= 1){
+                        resolve(true)
+                    } else {
+                        resolve(false)
+                    }
+                });
+            }
+        );
+    },
 }

@@ -17,31 +17,15 @@ app.use(session({
     resave: false,
 }));
 
-const db = new Sequelize(process.env.DATEBASE_NAME, process.env.DATEBASE_USER, process.env.DATEBASE_PASS, {
-    host: process.env.DATEBASE_HOST,
-    dialect: 'postgres',
-    logging: false
-});
-
-/* Validando conexion con la base de datos */
-db.authenticate()
-    .then(() => {
-        log(green('Conexión base de datos establecida'));
-    })
-    .catch(err => {
-        log(red('Error al conectar a la base de datos: '), err);
-        return false;
-    });
-
 var fns = module.exports = {
     modulos: async function (data) {
         return new Promise(
             (resolve, reject) => {
-                db.query(process.env.DATEBASE_ENCODING + "SELECT * FROM permisos_modulos WHERE id_modulo = ?", {
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM permisos_modulos WHERE id_modulo = ?", {
                     replacements: [data.Modulos_id]
                 }).then(([modulosData]) => {
                     if(_.size(modulosData) <= 0){
-                        db.query(process.env.DATEBASE_ENCODING + "INSERT INTO permisos_modulos(id_modulo, nombre_modulo) VALUES (?, ?) RETURNING id", {
+                        chatbot.query(process.env.DATEBASE_ENCODING + "INSERT INTO permisos_modulos(id_modulo, nombre_modulo) VALUES (?, ?) RETURNING id", {
                             replacements: [data.Modulos_id, data.Modulos_nombre]
                         }).then(([insertModulo]) => {
                             if(_.size(insertModulo) == 1){
@@ -51,7 +35,7 @@ var fns = module.exports = {
                             }
                         }); 
                     } else {
-                        db.query(process.env.DATEBASE_ENCODING + "UPDATE permisos_modulos SET id_modulo = ?, nombre_modulo = ? WHERE id_modulo = ? RETURNING id", {
+                        chatbot.query(process.env.DATEBASE_ENCODING + "UPDATE permisos_modulos SET id_modulo = ?, nombre_modulo = ? WHERE id_modulo = ? RETURNING id", {
                             replacements: [data.Modulos_id, data.Modulos_nombre, data.Modulos_id]
                         }).then(([updateModulo]) => {
                             if(_.size(updateModulo) == 1){
@@ -70,7 +54,7 @@ var fns = module.exports = {
     modulosExtraer: async function () {
         return new Promise(
             (resolve, reject) => {
-                db.query(process.env.DATEBASE_ENCODING + "SELECT * FROM permisos_modulos ORDER BY id", {
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM permisos_modulos ORDER BY id", {
                     replacements: []
                 }).then(([modulosData]) => {
                     if(_.size(modulosData) > 0){
@@ -86,7 +70,7 @@ var fns = module.exports = {
     modulosExtraerId: async function (data) {
         return new Promise(
             (resolve, reject) => {
-                db.query(process.env.DATEBASE_ENCODING + "SELECT * FROM permisos_modulos WHERE id = ?", {
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM permisos_modulos WHERE id = ?", {
                     replacements: [data.id]
                 }).then(([modulosData]) => {
                     if(_.size(modulosData) > 0){

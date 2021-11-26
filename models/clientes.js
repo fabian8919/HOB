@@ -17,33 +17,17 @@ app.use(session({
     resave: false,
 }));
 
-const db = new Sequelize(process.env.DATEBASE_NAME, process.env.DATEBASE_USER, process.env.DATEBASE_PASS, {
-    host: process.env.DATEBASE_HOST,
-    dialect: 'postgres',
-    logging: false
-});
-
-/* Validando conexion con la base de datos */
-db.authenticate()
-    .then(() => {
-        log(green('Conexión base de datos establecida'));
-    })
-    .catch(err => {
-        log(red('Error al conectar a la base de datos: '), err);
-        return false;
-    });
-
 var fns = module.exports = {
     clientes: async function (data) {
         log(yellow("Ingresa: clientes"));
         return new Promise(
             (resolve, reject) => {
                 var activo = (data.Clientes_activo == "on") ? true : false;
-                db.query(process.env.DATEBASE_ENCODING + "SELECT * FROM clientes WHERE nit = ?", {
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM clientes WHERE nit = ?", {
                     replacements: [data.Clientes_nit]
                 }).then(([clienteData]) => {
                     if(_.size(clienteData) <= 0){
-                        db.query(process.env.DATEBASE_ENCODING + "INSERT INTO clientes(nit, razon_social, activo, telefono, direccion, correo) VALUES (?, ?, ?, ?, ?, ?) RETURNING id", {
+                        chatbot.query(process.env.DATEBASE_ENCODING + "INSERT INTO clientes(nit, razon_social, activo, telefono, direccion, correo) VALUES (?, ?, ?, ?, ?, ?) RETURNING id", {
                             replacements: [data.Clientes_nit, data.Clientes_razon_social, activo, data.Clientes_telefono, data.Clientes_direccion, data.Clientes_correo]
                         }).then(([insertCliente]) => {
                             if(_.size(insertCliente) == 1){
@@ -53,7 +37,7 @@ var fns = module.exports = {
                             }
                         }); 
                     } else {
-                        db.query(process.env.DATEBASE_ENCODING + "UPDATE clientes SET razon_social = ?, activo = ? , telefono = ?, direccion = ?, correo = ? WHERE nit = ? RETURNING id", {
+                        chatbot.query(process.env.DATEBASE_ENCODING + "UPDATE clientes SET razon_social = ?, activo = ? , telefono = ?, direccion = ?, correo = ? WHERE nit = ? RETURNING id", {
                             replacements: [data.Clientes_razon_social, activo, data.Clientes_telefono, data.Clientes_direccion, data.Clientes_correo, data.Clientes_nit]
                         }).then(([insertCliente]) => {
                             if(_.size(insertCliente) == 1){
@@ -73,7 +57,7 @@ var fns = module.exports = {
         log(yellow("Ingresa: clientesExtraer"));
         return new Promise(
             (resolve, reject) => {
-                db.query(process.env.DATEBASE_ENCODING + "SELECT * FROM clientes", {
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM clientes", {
                     replacements: []
                 }).then(([clienteData]) => {
                     if(_.size(clienteData) > 0){
@@ -89,7 +73,7 @@ var fns = module.exports = {
     clientesExtraerId: async function (data) {
         return new Promise(
             (resolve, reject) => {
-                db.query(process.env.DATEBASE_ENCODING + "SELECT * FROM clientes WHERE id = ?", {
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM clientes WHERE id = ?", {
                     replacements: [data.id]
                 }).then(([clientesData]) => {
                     if(_.size(clientesData) > 0){

@@ -70,7 +70,11 @@ var _Usuarios = (function () {
                 _Globals.alertWait();
             },
             success: function (r) {
+                $('#contrasena').prop("required", true);
                 $('#contrasena').val('');
+                $('#cedula').val('');
+                $('#nombre').val('');
+                $('#correo').val('');
                 Swal.close();
                 if (r) {
                     _Globals.alertProcess("success", "Bien!", "El proceso fue exitoso.");
@@ -103,6 +107,7 @@ var _Usuarios = (function () {
                 activo.checked = data[0].activo;
                 bloqueado.checked = data[0].bloqueado;
                 $('#modalUsuarios').modal('show');
+                $('#contrasena').removeAttr("required");
                 Swal.close();
             }
         });
@@ -140,11 +145,27 @@ var _Usuarios = (function () {
         })
     }
 
+    var validarDuplicado = (cedula)=>{
+        $.ajax({
+            type: "POST",
+            url: "/usuarios/DuplicadoCedula/",
+            data: { "cedula": cedula },
+            success: function (r) {
+              if(r){
+                
+              } else {
+
+              }
+            }
+        });
+    }
+
     return {
         usuarios: usuarios,
         drawTable: drawTable,
         editarUsuario: editarUsuario,
-        eliminarUsuario: eliminarUsuario
+        eliminarUsuario: eliminarUsuario,
+        validarDuplicado:validarDuplicado
     }
 
 })(jQuery);
@@ -154,6 +175,17 @@ $(document).ready(function () {
     $('#form-usuarios').on('submit', (e) => {
         e.preventDefault();
         _Usuarios.usuarios();
+    });
+    
+    $('#modalUsuariosButton').on('click', ()=>{
+        $('#contrasena').val('');
+        $('#cedula').val('');
+        $('#nombre').val('');
+        $('#correo').val('');
+    });
+
+    $('#cedula').on('blur',()=>{
+        _Usuarios.validarDuplicado($('#cedula').val());
     });
 
 });

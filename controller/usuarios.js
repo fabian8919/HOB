@@ -33,4 +33,11 @@ router.post('/usuarios/ExtraerId', (req, res) => {
     })();
 });
 
+router.post('/usuarios/DuplicadoCedula', (req, res) => {
+    (async ()=>{
+        let resp = await fns.usuariosDuplicadoCedula(req.body);
+        res.send(JSON.stringify(resp));
+    })();
+});
+
 module.exports = router;
