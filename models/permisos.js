@@ -82,4 +82,20 @@ var fns = module.exports = {
             }
         );
     },
+
+    permisosEliminarPermiso: async function (data) {
+        return new Promise(
+            (resolve, reject) => {
+                chatbot.query(process.env.DATEBASE_ENCODING + "DELETE FROM permisos_acciones WHERE id = ?", {
+                    replacements: [data.id]
+                }).then(([permisosData]) => {
+                    if(_.size(permisosData) > 0){
+                        resolve(true)
+                    } else {
+                        resolve(false)
+                    }
+                });
+            }
+        );
+    },
 }

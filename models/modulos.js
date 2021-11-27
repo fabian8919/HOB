@@ -82,4 +82,36 @@ var fns = module.exports = {
             }
         );
     },
+
+    modulosEliminarModulo: async function (data) {
+        return new Promise(
+            (resolve, reject) => {
+                chatbot.query(process.env.DATEBASE_ENCODING + "DELETE FROM permisos_modulos WHERE id = ?", {
+                    replacements: [data.id]
+                }).then(([modulosData]) => {
+                    if(_.size(modulosData) > 0){
+                        resolve(true)
+                    } else {
+                        resolve(false)
+                    }
+                });
+            }
+        );
+    },
+
+    modulosExtraerDataModulosPadre: async function () {
+        return new Promise(
+            (resolve, reject) => {
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM modulos_padre ORDER BY id", {
+                    replacements: []
+                }).then(([modulosData]) => {
+                    if(_.size(modulosData) > 0){
+                        resolve(modulosData)
+                    } else {
+                        resolve(false)
+                    }
+                });
+            }
+        );
+    },
 }

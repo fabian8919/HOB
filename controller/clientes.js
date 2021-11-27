@@ -33,4 +33,11 @@ router.post('/clientes/extraerDataId/', (req, res) => {
     })();
 });
 
+router.post('/clientes/eliminarCliente/', (req, res) => {
+    (async ()=>{
+        let resp = await fns.clientesEliminarCliente(req.body);
+        res.send(JSON.stringify(resp));
+    })();
+});
+
 module.exports = router;

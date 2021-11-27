@@ -19,9 +19,9 @@ app.use(session({
 
 var fns = module.exports = {
     clientes: async function (data) {
-        log(yellow("Ingresa: clientes"));
         return new Promise(
             (resolve, reject) => {
+                log(green(data.Clientes_activo))
                 var activo = (data.Clientes_activo == "on") ? true : false;
                 chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM clientes WHERE nit = ?", {
                     replacements: [data.Clientes_nit]
@@ -37,13 +37,14 @@ var fns = module.exports = {
                             }
                         }); 
                     } else {
+                        log(cyan(activo))
                         chatbot.query(process.env.DATEBASE_ENCODING + "UPDATE clientes SET razon_social = ?, activo = ? , telefono = ?, direccion = ?, correo = ? WHERE nit = ? RETURNING id", {
                             replacements: [data.Clientes_razon_social, activo, data.Clientes_telefono, data.Clientes_direccion, data.Clientes_correo, data.Clientes_nit]
                         }).then(([insertCliente]) => {
                             if(_.size(insertCliente) == 1){
-                                resolve('actualizado');
+                                resolve(true);
                             } else {
-                                resolve('noactualizo');
+                                resolve(false);
                             }
                         }); 
                     }
@@ -54,7 +55,6 @@ var fns = module.exports = {
     },
 
     clientesExtraer: async function () {
-        log(yellow("Ingresa: clientesExtraer"));
         return new Promise(
             (resolve, reject) => {
                 chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM clientes", {
@@ -78,6 +78,22 @@ var fns = module.exports = {
                 }).then(([clientesData]) => {
                     if(_.size(clientesData) > 0){
                         resolve(clientesData)
+                    } else {
+                        resolve(false)
+                    }
+                });
+            }
+        );
+    },
+
+    clientesEliminarCliente: async function (data) {
+        return new Promise(
+            (resolve, reject) => {
+                chatbot.query(process.env.DATEBASE_ENCODING + "DELETE FROM clientes WHERE id = ?", {
+                    replacements: [data.id]
+                }).then(([clientesData]) => {
+                    if(_.size(clientesData) > 0){
+                        resolve(true)
                     } else {
                         resolve(false)
                     }

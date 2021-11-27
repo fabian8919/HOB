@@ -26,13 +26,14 @@ var _Permisos = (function () {
             url: "/permisos/extraerData/",
             beforeSend: function(){
                 TablePermisos.rows().clear().draw();
+                _Globals.alertWait();
             },
             success:function(r){
                 var data = JSON.parse(r);
                 var optHerramientas;
                 $.each(data,function(i,e){
-                    optHerramientas = '<a href="#" onclick="_Permisos.mostrarModalEditarPermiso('+e.id+')" ><span class="btn btn-warning btn-sm"><i class="far fa-edit fa-lg"></i></span></a>  ';
-                    optHerramientas += '<a href="#" onclick="mostrarModalDeleteCategoria('+e.id+')" id="deleteCategoria'+e.id+'" data-toggle="tooltip" data-placement="right" data-original-title="Eliminar Registro"><span class="btn btn-danger btn-sm"><i class="far fa-times-circle fa-lg"></i></span></a>';
+                    optHerramientas = '<a href="#" onclick="_Permisos.editarPermiso('+e.id+')" ><span class="btn btn-warning btn-sm"><i class="far fa-edit fa-lg"></i></span></a>  ';
+                    optHerramientas += '<a href="#" onclick="_Permisos.eliminarPermiso('+e.id+')" data-toggle="tooltip" data-placement="right" data-original-title="Eliminar Registro"><span class="btn btn-danger btn-sm"><i class="far fa-times-circle fa-lg"></i></span></a>';
                     TablePermisos.row.add([
                         optHerramientas,
                         e.id_permiso,
@@ -40,12 +41,13 @@ var _Permisos = (function () {
                     ]);
                 });
                 TablePermisos.draw();
+                Swal.close();
             }
             
         });    
     }
 
-    var mostrarModalEditarPermiso = (id) =>{        
+    var editarPermiso = (id) =>{        
         $.ajax({
             type:"POST",
             url: "/permisos/extraerDataId/",
@@ -53,6 +55,7 @@ var _Permisos = (function () {
                 "id":id
             },
             beforeSend: function(){
+                _Globals.alertWait();
             },
             success:function(r){
                 var data = JSON.parse(r);
@@ -60,6 +63,7 @@ var _Permisos = (function () {
                     $("#Permisos_id").val(data[0].id_permiso);
                     $("#Permisos_nombre").val(data[0].nombre);
                     $("#modalPermisos").modal("show");
+                    Swal.close();
                 }
             }
         });    
@@ -74,22 +78,60 @@ var _Permisos = (function () {
             url: "/permisos/",
             data: dataString,
             beforeSend: function () {
-                //$('#preload').show();
+                _Globals.alertWait();
             },
             success: function (r) { 
-                if(r){
-
-                }else{
-
+                $('#Permisos_id').prop("required", true);
+                $('#Permisos_id').val('');
+                $('#Permisos_nombre').val('');
+                $('#modalPermisos').modal('hide');
+                if (r) {
+                    _Globals.alertProcess("success", "Bien!", "El proceso fue exitoso.");
+                } else {
+                    _Globals.alertProcess("error", "Error!", "El proceso ha fallado.");
                 }
                 _Permisos.drawTable();
             }  
         });
     }
 
+    var eliminarPermiso = (id) => {
+        Swal.fire({
+            title: 'Estás Seguro?',
+            text: "Se eliminará el permiso!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, Eliminar!'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type:"POST",
+                    url: "/permisos/eliminarPermiso/",
+                    data:{
+                        "id":id
+                    },
+                    beforeSend: function(){
+                        _Globals.alertWait();
+                    },
+                    success:function(r){
+                        if (!r) {
+                            _Globals.NotifyError("El proceso ha fallado.");
+                        } else {
+                            _Permisos.drawTable();
+                            _Globals.alertProcess("success", "Bien!", "El cliente se eliminó con exito.");
+                        }
+                    }
+                });  
+            }
+        });
+    }
+
     return{
         permisos:permisos,
-        mostrarModalEditarPermiso:mostrarModalEditarPermiso,
+        editarPermiso:editarPermiso,
+        eliminarPermiso,
         drawTable:drawTable
     }
     

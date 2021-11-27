@@ -1,0 +1,24 @@
+-- Table: public.relacion_modulos
+
+-- DROP TABLE IF EXISTS public.relacion_modulos;
+
+CREATE TABLE IF NOT EXISTS public.relacion_modulos
+(
+    id integer NOT NULL DEFAULT nextval('relacion_modulos_id_seq'::regclass),
+    rel_padre character varying COLLATE pg_catalog."default" NOT NULL,
+    rel_hijo character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT relacion_modulos_pkey PRIMARY KEY (id),
+    CONSTRAINT relacion_modulos_rel_hijo_fkey FOREIGN KEY (rel_hijo)
+        REFERENCES public.permisos_modulos (id_modulo) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT relacion_modulos_rel_padre_fkey FOREIGN KEY (rel_padre)
+        REFERENCES public.modulos_padre (id_modulo_padre) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.relacion_modulos
+    OWNER to postgres;

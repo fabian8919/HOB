@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const app = express();
 const session = require("express-session");
-const fns = require("../models/permisos");
+const fns = require("../models/modulosPadre");
 
 /* Conectando el servidor a las sesiones */
 app.use(session({
@@ -12,30 +12,30 @@ app.use(session({
     resave: false,
 }));
 
-router.post('/permisos/', (req, res) => {
+router.post('/modulosPadre/', (req, res) => {
     (async ()=>{
-        let resp = await fns.permisos(req.body);
+        let resp = await fns.modulosPadre(req.body);
         res.send(JSON.stringify(resp));
     })();
 });
 
-router.post('/permisos/extraerData/', (req, res) => {
+router.post('/modulosPadre/extraerData/', (req, res) => {
     (async ()=>{
-        let resp = await fns.permisosExtraer();
+        let resp = await fns.modulosPadreExtraer();
         res.send(JSON.stringify(resp));
     })();
 });
 
-router.post('/permisos/extraerDataId/', (req, res) => {
+router.post('/modulosPadre/extraerDataId/', (req, res) => {
     (async ()=>{
-        let resp = await fns.permisosExtraerId(req.body);
+        let resp = await fns.modulosPadreExtraerId(req.body);
         res.send(JSON.stringify(resp));
     })();
 });
 
-router.post('/permisos/eliminarPermiso/', (req, res) => {
+router.post('/modulosPadre/eliminarModulo/', (req, res) => {
     (async ()=>{
-        let resp = await fns.permisosEliminarPermiso(req.body);
+        let resp = await fns.modulosPadreEliminarModulo(req.body);
         res.send(JSON.stringify(resp));
     })();
 });

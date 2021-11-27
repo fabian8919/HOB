@@ -33,4 +33,18 @@ router.post('/modulos/extraerDataId/', (req, res) => {
     })();
 });
 
+router.post('/modulos/eliminarModulo/', (req, res) => {
+    (async ()=>{
+        let resp = await fns.modulosEliminarModulo(req.body);
+        res.send(JSON.stringify(resp));
+    })();
+});
+
+router.post('/modulos/extraerDataModulosPadre/', (req, res) => {
+    (async ()=>{
+        let resp = await fns.modulosExtraerDataModulosPadre();
+        res.send(JSON.stringify(resp));
+    })();
+});
+
 module.exports = router;

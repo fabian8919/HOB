@@ -32,15 +32,14 @@ var _Clientes = (function () {
             url: "/clientes/extraerData/",
             beforeSend: function(){
                 TableClientes.rows().clear().draw();
-                
+                _Globals.alertWait();
             },
             success:function(r){
                 var data = JSON.parse(r);
-                console.log(data);
                 var optHerramientas;
                 $.each(data,function(i,e){
-                    optHerramientas = '<a href="#" onclick="_Clientes.mostrarModalEditarCliente('+e.id+')" ><span class="btn btn-warning btn-sm"><i class="far fa-edit fa-lg"></i></span></a>  ';
-                    optHerramientas += '<a href="#" onclick="mostrarModalDeleteCategoria('+e.id+')" id="deleteCategoria'+e.id+'" data-toggle="tooltip" data-placement="right" data-original-title="Eliminar Registro"><span class="btn btn-danger btn-sm"><i class="far fa-times-circle fa-lg"></i></span></a>';
+                    optHerramientas = '<a href="#" onclick="_Clientes.editarCliente('+e.id+')" ><span class="btn btn-warning btn-sm"><i class="far fa-edit fa-lg"></i></span></a>  ';
+                    optHerramientas += '<a href="#" onclick="_Clientes.eliminarCliente(' + e.id + ')" data-toggle="tooltip" data-placement="right" data-original-title="Eliminar Registro"><span class="btn btn-danger btn-sm"><i class="far fa-times-circle fa-lg"></i></span></a>';
                     TableClientes.row.add([
                         optHerramientas,
                         e.id,
@@ -54,13 +53,14 @@ var _Clientes = (function () {
                     ]);
                 });
                 TableClientes.draw();
+                Swal.close();
             }
             
         });
         
     }
 
-    var mostrarModalEditarCliente = (id) =>{        
+    var editarCliente = (id) =>{        
         $.ajax({
             type:"POST",
             url: "/clientes/extraerDataId/",
@@ -68,6 +68,7 @@ var _Clientes = (function () {
                 "id":id
             },
             beforeSend: function(){
+                _Globals.alertWait();
             },
             success:function(r){
                 var data = JSON.parse(r);
@@ -83,6 +84,7 @@ var _Clientes = (function () {
                         $("#Clientes_activo").prop('checked', false);
                     }
                     $("#modalClientes").modal("show");
+                    Swal.close();
                 }
             }
         });    
@@ -97,18 +99,63 @@ var _Clientes = (function () {
             url: "/clientes/",
             data: dataString,
             beforeSend: function () {
-                //$('#preload').show();
+                _Globals.alertWait();
             },
             success: function (r) { 
-                _Clientes.drawTable()
-                // console.log(r);
+                $('#Clientes_nit').prop("required", true);
+                $('#Clientes_nit').val('');
+                $('#Clientes_razon_social').val('');
+                $('#Clientes_correo').val('');
+                $('#Clientes_direccion').val('');
+                $("#Clientes_telefono").val('');
+                $('#modalClientes').modal('hide');
+                if (r) {
+                    _Globals.alertProcess("success", "Bien!", "El proceso fue exitoso.");
+                } else {
+                    _Globals.alertProcess("error", "Error!", "El proceso ha fallado.");
+                }
+                _Clientes.drawTable();
             }  
+        });
+    }
+
+    var eliminarCliente = (id) => {
+        Swal.fire({
+            title: 'Estás Seguro?',
+            text: "Se eliminará el cliente!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, Eliminar!'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type:"POST",
+                    url: "/clientes/eliminarCliente/",
+                    data:{
+                        "id":id
+                    },
+                    beforeSend: function(){
+                        _Globals.alertWait();
+                    },
+                    success:function(r){
+                        if (!r) {
+                            _Globals.NotifyError("El proceso ha fallado.");
+                        } else {
+                            _Clientes.drawTable();
+                            _Globals.alertProcess("success", "Bien!", "El cliente se eliminó con exito.");
+                        }
+                    }
+                });  
+            }
         });
     }
 
     return {
         clientes:clientes,
-        mostrarModalEditarCliente:mostrarModalEditarCliente,
+        editarCliente:editarCliente,
+        eliminarCliente:eliminarCliente,
         drawTable:drawTable
     }
     

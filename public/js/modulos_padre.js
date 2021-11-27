@@ -1,13 +1,13 @@
-var _Modulos = (function () {
-    var TableModulos;
+var _ModulosPadre = (function () {
+    var TableModulosPadre;
     
-    _columnsMod = [
+    _columnsModPadre = [
         {"width": "10%"},
         {"width": "30%"},
         {"width": "60%"}
     ];
 
-    TableModulos = $("#tableModulos").DataTable({
+    TableModulosPadre = $("#tableModulosPadre").DataTable({
         pagingType: "numbers",
         language: lang_dataTable,
         autoWidth: false,
@@ -16,41 +16,41 @@ var _Modulos = (function () {
         paging: true,
         destroy: true,
         pageLength: 10,
-        columns: _columnsMod,
+        columns: _columnsModPadre,
         order: [[1, 'asc']]
     });
 
     var drawTable = () =>{        
         $.ajax({
             type:"POST",
-            url: "/modulos/extraerData/",
+            url: "/modulosPadre/extraerData/",
             beforeSend: function(){
-                TableModulos.rows().clear().draw();
+                TableModulosPadre.rows().clear().draw();
                 _Globals.alertWait();
             },
             success:function(r){
                 var data = JSON.parse(r);
                 var optHerramientas;
                 $.each(data,function(i,e){
-                    optHerramientas = '<a href="#" onclick="_Modulos.editarModulo('+e.id+')" ><span class="btn btn-warning btn-sm"><i class="far fa-edit fa-lg"></i></span></a>  ';
-                    optHerramientas += '<a href="#" onclick="_Modulos.eliminarModulo('+e.id+')" data-toggle="tooltip" data-placement="right" data-original-title="Eliminar Registro"><span class="btn btn-danger btn-sm"><i class="far fa-times-circle fa-lg"></i></span></a>';
-                    TableModulos.row.add([
+                    optHerramientas = '<a href="#" onclick="_ModulosPadre.editarModuloPadre('+e.id+')" ><span class="btn btn-warning btn-sm"><i class="far fa-edit fa-lg"></i></span></a>  ';
+                    optHerramientas += '<a href="#" onclick="_ModulosPadre.eliminarModuloPadre('+e.id+')" data-toggle="tooltip" data-placement="right" data-original-title="Eliminar Registro"><span class="btn btn-danger btn-sm"><i class="far fa-times-circle fa-lg"></i></span></a>';
+                    TableModulosPadre.row.add([
                         optHerramientas,
-                        e.id_modulo,
-                        e.nombre_modulo,
+                        e.id_modulo_padre,
+                        e.nombre,
                     ]);
                 });
-                TableModulos.draw();
+                TableModulosPadre.draw();
                 Swal.close();
             }
             
         });    
     }
 
-    var editarModulo = (id) =>{        
+    var editarModuloPadre = (id) =>{        
         $.ajax({
             type:"POST",
-            url: "/modulos/extraerDataId/",
+            url: "/modulosPadre/extraerDataId/",
             data:{
                 "id":id
             },
@@ -60,42 +60,42 @@ var _Modulos = (function () {
             success:function(r){
                 var data = JSON.parse(r);
                 if(data){
-                    $("#Modulos_id").val(data[0].id_modulo);
-                    $("#Modulos_nombre").val(data[0].nombre_modulo);
-                    $("#modalModulos").modal("show");
+                    $("#ModulosPadre_id").val(data[0].id_modulo_padre);
+                    $("#ModulosPadre_nombre").val(data[0].nombre);
+                    $("#modalModulosPadre").modal("show");
                     Swal.close();
                 }
             }
         });    
     }
 
-    var modulos = () => {
+    var modulosPadre = () => {
 
-        var dataString = $('#form-modulos').serialize();
+        var dataString = $('#form-modulosPadre').serialize();
         
         $.ajax({
             type: "POST",
-            url: "/modulos/",
+            url: "/modulosPadre/",
             data: dataString,
             beforeSend: function () {
                 _Globals.alertWait();
             },
             success: function (r) { 
-                $('#Modulos_id').prop("required", true);
-                $('#Modulos_id').val('');
-                $('#Modulos_nombre').val('');
-                $('#modalModulos').modal('hide');
+                $('#ModulosPadre_id').prop("required", true);
+                $('#ModulosPadre_id').val('');
+                $('#ModulosPadre_nombre').val('');
+                $('#modalModulosPadre').modal('hide');
                 if (r) {
                     _Globals.alertProcess("success", "Bien!", "El proceso fue exitoso.");
                 } else {
                     _Globals.alertProcess("error", "Error!", "El proceso ha fallado.");
                 }
-                _Modulos.drawTable();
+                _ModulosPadre.drawTable();
             }  
         });
     }
 
-    var eliminarModulo = (id) => {
+    var eliminarModuloPadre = (id) => {
         Swal.fire({
             title: 'Estás Seguro?',
             text: "Se eliminará el módulo!",
@@ -108,7 +108,7 @@ var _Modulos = (function () {
             if (result.value) {
                 $.ajax({
                     type:"POST",
-                    url: "/modulos/eliminarModulo/",
+                    url: "/modulosPadre/eliminarModulo/",
                     data:{
                         "id":id
                     },
@@ -119,7 +119,7 @@ var _Modulos = (function () {
                         if (!r) {
                             _Globals.NotifyError("El proceso ha fallado.");
                         } else {
-                            _Modulos.drawTable();
+                            _ModulosPadre.drawTable();
                             _Globals.alertProcess("success", "Bien!", "El módulo se eliminó con exito.");
                         }
                     }
@@ -128,33 +128,10 @@ var _Modulos = (function () {
         });
     }
 
-    var traerModulosPadre = (id) =>{        
-        $.ajax({
-            type:"POST",
-            url: "/modulos/extraerDataModulosPadre/",
-            data:{
-                "id":id
-            },
-            beforeSend: function(){
-                $('#Modulos_relPadre').html('');
-            },
-            success:function(r){
-                var data = JSON.parse(r);
-                console.log(data)
-                if(data){
-                    $.each(data, function(key, val){
-                        $('#Modulos_relPadre').append('<option value="'+ data[key].id_modulo_padre+ '">'+data[key].nombre+'</option>')
-                    });
-                }
-            }
-        });    
-    }
-
     return{
-        modulos:modulos,
-        editarModulo:editarModulo,
-        eliminarModulo:eliminarModulo,
-        traerModulosPadre:traerModulosPadre,
+        modulosPadre:modulosPadre,
+        editarModuloPadre:editarModuloPadre,
+        eliminarModuloPadre:eliminarModuloPadre,
         drawTable:drawTable
     }
     
@@ -162,14 +139,10 @@ var _Modulos = (function () {
 
 $(document).ready(function () {
 
-    $('#modalModulos').on('shown.bs.modal', function (e) {
-        _Modulos.traerModulosPadre();
-    })
-
-    _Modulos.drawTable();
-    $('#form-modulos').on('submit', (e)=>{
+    _ModulosPadre.drawTable();
+    $('#form-modulosPadre').on('submit', (e)=>{
         e.preventDefault();
-        _Modulos.modulos();
+        _ModulosPadre.modulosPadre();
     });
 
 });
