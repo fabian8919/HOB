@@ -19,8 +19,6 @@ app.use(session({
 
 var fns = module.exports = {
     usuarios: async function (data) {
-        log(data)
-        log(yellow("Ingresa: usuarios"));
         return new Promise(
             (resolve, reject) => {
                 
@@ -68,7 +66,6 @@ var fns = module.exports = {
         );
     },
     usuariosExtraer: async function () {
-        log(yellow("Ingresa: usuariosExtraer"));
         return new Promise(
             (resolve, reject) => {
                 chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios", {
@@ -84,7 +81,6 @@ var fns = module.exports = {
         );
     },
     usuariosExtraerId: async function (data) {
-        log(yellow("Ingresa: usuariosExtraerId"));
         return new Promise(
             (resolve, reject) => {
                 chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios WHERE id = ?", {
@@ -100,7 +96,6 @@ var fns = module.exports = {
         );
     },
     usuariosDuplicadoCedula: async function (data) {
-        log(yellow("Ingresa: usuariosDuplicadoCedula"));
         return new Promise(
             (resolve, reject) => {
                 chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios WHERE cedula = ?", {
@@ -116,7 +111,6 @@ var fns = module.exports = {
         );
     },
     usuariosValidarContrasena: async function (data) {
-        log(yellow("Ingresa: usuariosValidarContrasena"));
         return new Promise(
             (resolve, reject) => {
                 chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios WHERE cedula = ?", {
@@ -136,6 +130,13 @@ var fns = module.exports = {
                         resolve(false);
                     }
                 });
+            }
+        );
+    },
+    usuariosClienteUsuario: async function (data) {
+        return new Promise(
+            (resolve, reject) => {
+              log(data)
             }
         );
     },

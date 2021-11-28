@@ -1,5 +1,6 @@
 'use strict'
 const express = require('express');
+const log = console.log
 const router = express.Router();
 const app = express();
 const session = require("express-session");
@@ -13,7 +14,12 @@ app.use(session({
 
 /* inicio */
 router.get('/', (req, res) => {
-    res.render('index');
+    log(req.session)
+    if(req.session.userid != null){
+        res.render('index');
+    } else {
+        res.render('login');
+    }
 });
 
 module.exports = router;

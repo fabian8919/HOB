@@ -42,7 +42,15 @@ router.post('/usuarios/DuplicadoCedula', (req, res) => {
 
 router.post('/usuarios/ValidarContrasena', (req, res) => {
     (async () => {
+        req.body.cedula = req.session.cedula;
         let resp = await fns.usuariosValidarContrasena(req.body);
+        res.send(resp);
+    })();
+});
+
+router.post('/usuario/UsuarioCliente', (req, res) => {
+    (async () => {
+        let resp = await fns.usuariosClienteUsuario(req.body);
         res.send(resp);
     })();
 });

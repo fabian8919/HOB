@@ -1,0 +1,274 @@
+<!-- Asociacion tabla a tabla -->
+<div class="modal fade" id="modalUsuariosClienteRela" role="dialog" >
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header modal-colored-header bg-primary">
+                <h4 class="modal-title" id="modalUsuariosClienteRelaLabel">Relacionar Clientes</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-5">
+                        <h4>Usuarios permitidos:</h4>
+                        <span id="CClistaUsuariosSocial">
+                            <div id="listaUsuariosSocial_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-6"></div>
+                                    <div class="col-sm-12 col-md-6">
+                                        <div id="listaUsuariosSocial_filter" class="dataTables_filter">
+                                            <label>Buscar:<input type="search" class="form-control form-control-sm"
+                                                    placeholder="" aria-controls="listaUsuariosSocial"></label></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="dataTables_scroll">
+                                            <div class="dataTables_scrollHead"
+                                                style="overflow: hidden; position: relative; border: 0px; width: 100%;">
+                                                <div class="dataTables_scrollHeadInner"
+                                                    style="box-sizing: content-box; width: 427.5px; padding-right: 19px;">
+                                                    <table
+                                                        class="display table table-striped table-hover dataTable table-bordered table-condensed compact nowrap no-footer"
+                                                        role="grid" style="margin-left: 0px; width: 427.5px;">
+                                                        <thead>
+                                                            <tr role="row">
+                                                                <th class="header-table sorting" tabindex="0"
+                                                                    aria-controls="listaUsuariosSocial" rowspan="1"
+                                                                    colspan="1" style="width: 108.628px;"
+                                                                    aria-label="Cédula: Activar para ordenar la columna de manera ascendente">
+                                                                    Cédula</th>
+                                                                <th class="header-table sorting_asc" tabindex="0"
+                                                                    aria-controls="listaUsuariosSocial" rowspan="1"
+                                                                    colspan="1" style="width: 229.323px;"
+                                                                    aria-sort="ascending"
+                                                                    aria-label="Nombres: Activar para ordenar la columna de manera descendente">
+                                                                    Nombres</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="dataTables_scrollBody"
+                                                style="position: relative; overflow: auto; height: 300px; width: 100%;">
+                                                <table
+                                                    class="display table table-striped table-hover dataTable table-bordered table-condensed compact nowrap no-footer"
+                                                    id="listaUsuariosSocial" role="grid" style="width: 100%;">
+                                                    <thead>
+                                                        <tr role="row" style="height: 0px;">
+                                                            <th class="header-table sorting"
+                                                                aria-controls="listaUsuariosSocial" rowspan="1"
+                                                                colspan="1"
+                                                                style="width: 108.628px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+                                                                aria-label="Cédula: Activar para ordenar la columna de manera ascendente">
+                                                                <div class="dataTables_sizing"
+                                                                    style="height: 0px; overflow: hidden;">Cédula</div>
+                                                            </th>
+                                                            <th class="header-table sorting_asc"
+                                                                aria-controls="listaUsuariosSocial" rowspan="1"
+                                                                colspan="1"
+                                                                style="width: 229.323px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+                                                                aria-sort="ascending"
+                                                                aria-label="Nombres: Activar para ordenar la columna de manera descendente">
+                                                                <div class="dataTables_sizing"
+                                                                    style="height: 0px; overflow: hidden;">Nombres</div>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr role="row" class="odd">
+                                                            <td>98669593</td>
+                                                            <td class="sorting_1">ADMINISTRADOR</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div id="listaUsuariosSocial_processing" class="dataTables_processing card"
+                                            style="display: none;">Procesando...</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-5"></div>
+                                    <div class="col-sm-12 col-md-7">
+                                        <div class="dataTables_paginate paging_simple_numbers"
+                                            id="listaUsuariosSocial_paginate">
+                                            <ul class="pagination">
+                                                <li class="paginate_button page-item previous disabled"
+                                                    id="listaUsuariosSocial_previous"><a href="#"
+                                                        aria-controls="listaUsuariosSocial" data-dt-idx="0" tabindex="0"
+                                                        class="page-link">Anterior</a></li>
+                                                <li class="paginate_button page-item active"><a href="#"
+                                                        aria-controls="listaUsuariosSocial" data-dt-idx="1" tabindex="0"
+                                                        class="page-link">1</a></li>
+                                                <li class="paginate_button page-item "><a href="#"
+                                                        aria-controls="listaUsuariosSocial" data-dt-idx="2" tabindex="0"
+                                                        class="page-link">2</a></li>
+                                                <li class="paginate_button page-item "><a href="#"
+                                                        aria-controls="listaUsuariosSocial" data-dt-idx="3" tabindex="0"
+                                                        class="page-link">3</a></li>
+                                                <li class="paginate_button page-item "><a href="#"
+                                                        aria-controls="listaUsuariosSocial" data-dt-idx="4" tabindex="0"
+                                                        class="page-link">4</a></li>
+                                                <li class="paginate_button page-item "><a href="#"
+                                                        aria-controls="listaUsuariosSocial" data-dt-idx="5" tabindex="0"
+                                                        class="page-link">5</a></li>
+                                                <li class="paginate_button page-item disabled"
+                                                    id="listaUsuariosSocial_ellipsis"><a href="#"
+                                                        aria-controls="listaUsuariosSocial" data-dt-idx="6" tabindex="0"
+                                                        class="page-link">…</a></li>
+                                                <li class="paginate_button page-item "><a href="#"
+                                                        aria-controls="listaUsuariosSocial" data-dt-idx="7" tabindex="0"
+                                                        class="page-link">11</a></li>
+                                                <li class="paginate_button page-item next"
+                                                    id="listaUsuariosSocial_next"><a href="#"
+                                                        aria-controls="listaUsuariosSocial" data-dt-idx="8" tabindex="0"
+                                                        class="page-link">Siguiente</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="col-md-1 text-center align-self-center">
+                        <button class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom"
+                            id="btnInsertUsuCh" data-original-title="" title="">
+                            <svg class="svg-inline--fa fa-caret-right fa-w-6 fa-2x" aria-hidden="true" focusable="false"
+                                data-prefix="fas" data-icon="caret-right" role="img" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 192 512" data-fa-i2svg="">
+                                <path fill="currentColor"
+                                    d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z">
+                                </path>
+                            </svg><!-- <i class="fas fa-caret-right fa-2x"></i> -->
+                        </button>
+                        <hr class="hr_custom">
+                        <button class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom"
+                            id="btnDelChUsu">
+                            <svg class="svg-inline--fa fa-caret-left fa-w-6 fa-2x" aria-hidden="true" focusable="false"
+                                data-prefix="fas" data-icon="caret-left" role="img" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 192 512" data-fa-i2svg="">
+                                <path fill="currentColor"
+                                    d="M192 127.338v257.324c0 17.818-21.543 26.741-34.142 14.142L29.196 270.142c-7.81-7.81-7.81-20.474 0-28.284l128.662-128.662c12.599-12.6 34.142-3.676 34.142 14.142z">
+                                </path>
+                            </svg><!-- <i class="fas fa-caret-left fa-2x"></i> -->
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <h2>Usuarios en este Canal:</h2>
+                        <span id="CClistaUsuariosChannelSocial">
+                            <div id="listaUsuariosChannelSocial_wrapper"
+                                class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-6"></div>
+                                    <div class="col-sm-12 col-md-6">
+                                        <div id="listaUsuariosChannelSocial_filter" class="dataTables_filter">
+                                            <label>Buscar:<input type="search" class="form-control form-control-sm"
+                                                    placeholder="" aria-controls="listaUsuariosChannelSocial"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="dataTables_scroll">
+                                            <div class="dataTables_scrollHead"
+                                                style="overflow: hidden; position: relative; border: 0px; width: 100%;">
+                                                <div class="dataTables_scrollHeadInner"
+                                                    style="box-sizing: content-box; width: 522.344px; padding-right: 19px;">
+                                                    <table
+                                                        class="display table table-striped table-hover dataTable table-bordered table-condensed compact nowrap no-footer"
+                                                        role="grid" style="margin-left: 0px; width: 522.344px;">
+                                                        <thead>
+                                                            <tr role="row">
+                                                                <th class="header-table sorting" tabindex="0"
+                                                                    aria-controls="listaUsuariosChannelSocial"
+                                                                    rowspan="1" colspan="1" style="width: 120.903px;"
+                                                                    aria-label="Cédula: Activar para ordenar la columna de manera ascendente">
+                                                                    Cédula</th>
+                                                                <th class="header-table sorting_asc" tabindex="0"
+                                                                    aria-controls="listaUsuariosChannelSocial"
+                                                                    rowspan="1" colspan="1" style="width: 311.892px;"
+                                                                    aria-sort="ascending"
+                                                                    aria-label="Nombres: Activar para ordenar la columna de manera descendente">
+                                                                    Nombres</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="dataTables_scrollBody"
+                                                style="position: relative; overflow: auto; height: 300px; width: 100%;">
+                                                <table
+                                                    class="display table table-striped table-hover dataTable table-bordered table-condensed compact nowrap no-footer"
+                                                    id="listaUsuariosChannelSocial" role="grid" style="width: 100%;">
+                                                    <thead>
+                                                        <tr role="row" style="height: 0px;">
+                                                            <th class="header-table sorting"
+                                                                aria-controls="listaUsuariosChannelSocial" rowspan="1"
+                                                                colspan="1"
+                                                                style="width: 120.903px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+                                                                aria-label="Cédula: Activar para ordenar la columna de manera ascendente">
+                                                                <div class="dataTables_sizing"
+                                                                    style="height: 0px; overflow: hidden;">Cédula</div>
+                                                            </th>
+                                                            <th class="header-table sorting_asc"
+                                                                aria-controls="listaUsuariosChannelSocial" rowspan="1"
+                                                                colspan="1"
+                                                                style="width: 311.892px; padding-top: 0px; padding-bottom: 0px; border-top-width: 0px; border-bottom-width: 0px; height: 0px;"
+                                                                aria-sort="ascending"
+                                                                aria-label="Nombres: Activar para ordenar la columna de manera descendente">
+                                                                <div class="dataTables_sizing"
+                                                                    style="height: 0px; overflow: hidden;">Nombres</div>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr role="row" class="odd">
+                                                            <td>98669593</td>
+                                                            <td class="sorting_1">ADMINISTRADOR</td>
+                                                        </tr>
+                                                    
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div id="listaUsuariosChannelSocial_processing"
+                                            class="dataTables_processing card" style="display: none;">Procesando...
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-5"></div>
+                                    <div class="col-sm-12 col-md-7">
+                                        <div class="dataTables_paginate paging_simple_numbers"
+                                            id="listaUsuariosChannelSocial_paginate">
+                                            <ul class="pagination">
+                                                <li class="paginate_button page-item previous disabled"
+                                                    id="listaUsuariosChannelSocial_previous"><a href="#"
+                                                        aria-controls="listaUsuariosChannelSocial" data-dt-idx="0"
+                                                        tabindex="0" class="page-link">Anterior</a></li>
+                                                <li class="paginate_button page-item active"><a href="#"
+                                                        aria-controls="listaUsuariosChannelSocial" data-dt-idx="1"
+                                                        tabindex="0" class="page-link">1</a></li>
+                                                <li class="paginate_button page-item next disabled"
+                                                    id="listaUsuariosChannelSocial_next"><a href="#"
+                                                        aria-controls="listaUsuariosChannelSocial" data-dt-idx="2"
+                                                        tabindex="0" class="page-link">Siguiente</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Asociacion tabla a tabla -->
+

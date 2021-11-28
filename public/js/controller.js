@@ -33,11 +33,12 @@ var _Admin = (function () {
         $.ajax({
             url: ruta,
             beforeSend: function () {
-                // $('#page-loader').css('display', '');
-                // $('#page-loader').fadeOut(800);
+                _Globals.alertWait();
             },
             success: function (data) {
                 $('#contentPage').html(data);
+                _Admin.sidebarControl(vista);
+                Swal.close();
             },
             error: function (_error) {
                 console.log("Error!", "Modulo no encontrado "+ vista, _error);
@@ -45,18 +46,44 @@ var _Admin = (function () {
         });
     }
 
+    var sidebarControl = (vista)=>{
+        $('#sidebarnav li').removeClass("selected");
+        if(vista == 'index'){
+            $('#indexSidebar').addClass("selected");
+            $('#indexWell').html("Bienvenido "+localStorage.getItem('nombre'));
+        } else if(vista == 'clientes'){
+            $('#clientesSidebar').addClass("selected");
+        } else if(vista == 'usuarios'){
+            $('#usuariosSidebar').addClass("selected");
+        } else if(vista == 'permisos'){
+            $('#permisosSidebar').addClass("selected");
+        } else if(vista == 'modulos'){
+            $('#modulosSidebar').addClass("selected");
+        } else if(vista = 'modulos_padre'){
+            $('#modulospadreSidebar').addClass("selected");
+        } else {
+            $('#indexSidebar').addClass("selected");
+        }
+    }
+
     return {
-        traerVista: traerVista
+        traerVista: traerVista,
+        sidebarControl:sidebarControl
     }
 
 })(jQuery);
 
 $(document).ready(function () {
 
+    $('#nomUser').html(localStorage.getItem('nombre'));
+
     /* Control de vista */
     var vista = 'index';
     if (localStorage.vista != undefined) {
         vista = localStorage.vista;
+    }
+    if(localStorage.vista == 'index'){
+        $('#indexSidebar').addClass("selected");
     }
     _Admin.traerVista(vista);
 

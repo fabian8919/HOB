@@ -1,5 +1,8 @@
 var _Usuarios = (function () {
     var TableUsuarios;
+    var tableClientesUS;
+    var tableModulosUS;
+    var tablePermisosUS;
 
     _columnsUsu = [
         { "width": "5%" },
@@ -12,6 +15,11 @@ var _Usuarios = (function () {
         { "width": "15%" },
     ];
 
+    _columnsUsuC = [
+        { "width": "20%" },
+        { "width": "80%" }
+    ];
+
     TableUsuarios = $("#tableUsuarios").DataTable({
         pagingType: "numbers",
         language: lang_dataTable,
@@ -20,8 +28,47 @@ var _Usuarios = (function () {
         ordering: true,
         paging: true,
         destroy: true,
-        pageLength: 7,
+        pageLength: 10,
         columns: _columnsUsu,
+        order: [[1, 'desc']]
+    });
+
+    tableClientesUS = $("#tableClientesUS").DataTable({
+        pagingType: "numbers",
+        language: lang_dataTable,
+        autoWidth: false,
+        searching: true,
+        ordering: true,
+        paging: true,
+        destroy: true,
+        pageLength: 10,
+        columns: _columnsUsuC,
+        order: [[1, 'asc']]
+    });
+
+    tableModulosUS = $("#tableModulosUS").DataTable({
+        pagingType: "numbers",
+        language: lang_dataTable,
+        autoWidth: false,
+        searching: true,
+        ordering: true,
+        paging: true,
+        destroy: true,
+        pageLength: 10,
+        columns: _columnsUsuC,
+        order: [[1, 'asc']]
+    });
+
+    tablePermisosUS = $("#tablePermisosUS").DataTable({
+        pagingType: "numbers",
+        language: lang_dataTable,
+        autoWidth: false,
+        searching: true,
+        ordering: true,
+        paging: true,
+        destroy: true,
+        pageLength: 10,
+        columns: _columnsUsuC,
         order: [[1, 'asc']]
     });
 
@@ -38,7 +85,7 @@ var _Usuarios = (function () {
                 var optHerramientas;
                 $.each(data, function (i, e) {
                     optHerramientas = '<a href="#" onclick="_Usuarios.editarUsuario(' + e.id + ')" id="editarUsuario' + e.id + '" data-toggle="tooltip" data-placement="left" data-original-title="Editar Registro"><span class="btn btn-warning btn-sm"><i class="far fa-edit fa-lg"></i></span></a>  ';
-                    optHerramientas += '<a href="#" onclick="_Usuarios.eliminarUsuario(' + e.id + ')" id="deleteUusario' + e.id + '" data-toggle="tooltip" data-placement="right" data-original-title="Eliminar Registro"><span class="btn btn-danger btn-sm"><i class="far fa-times-circle fa-lg"></i></span></a>';
+                    optHerramientas += '<a href="#" onclick="_Usuarios.eliminarUsuario(' + e.id + ')" id="deleteUusario' + e.id + '" data-toggle="tooltip" data-placement="right" data-original-title="Eliminar Registro"><span class="btn btn-danger btn-sm"><i class="fas fa-user-times"></i></span></a>';
                     TableUsuarios.row.add([
                         optHerramientas,
                         e.id,
@@ -135,7 +182,7 @@ var _Usuarios = (function () {
                     $.ajax({
                         type: "POST",
                         url: "/usuarios/ValidarContrasena/",
-                        data: { "contrasena": pass, "cedula": "4514989", "id": id },
+                        data: { "contrasena": pass, "id": id },
                         success: function (r) {
                             if (!r) {
                                 _Globals.NotifyError("La contraseña es incorrecta.");
@@ -164,12 +211,48 @@ var _Usuarios = (function () {
         });
     }
 
+    var extraerClientes = () => {
+        $.ajax({
+            type: "POST",
+            url: "/clientes/extraerData/",
+            beforeSend: function () {
+                _Globals.alertWait();
+            },
+            success: function (r) {
+                $('#clientesAsgUsu').empty();
+                var data = JSON.parse(r);
+                $('#clientesAsgUsu').append('<option value="">Seleccionar</option>');
+                $.each(data, function (i, e) {
+                    $('#clientesAsgUsu').append('<option value="' + e.id + '">' + e.razon_social + '</option>');
+                });
+                Swal.close();
+            }
+        });
+    }
+
+    var incluirCliente = (idcliente) => {
+        $.ajax({
+            type: "POST",
+            url: "/usuario/UsuarioCliente/",
+            data: { "idcliente": idcliente },
+            beforeSend: function () {
+                _Globals.alertWait();
+            },
+            success: function (r) {
+                console.log(r);
+                Swal.close();
+            }
+        });
+    }
+
     return {
         usuarios: usuarios,
         drawTable: drawTable,
         editarUsuario: editarUsuario,
         eliminarUsuario: eliminarUsuario,
-        validarDuplicado: validarDuplicado
+        validarDuplicado: validarDuplicado,
+        extraerClientes: extraerClientes,
+        incluirCliente: incluirCliente
     }
 
 })(jQuery);
@@ -186,11 +269,42 @@ $(document).ready(function () {
         $('#cedula').val('');
         $('#nombre').val('');
         $('#correo').val('');
+        _Globals.NotifyInfo("Una contraseña fuerte debe tener: un numero, un caracter especial, una letra mayuscula.");
     });
 
     $('#cedula').on('blur', () => {
         if ($('#cedula').val() != "") {
             _Usuarios.validarDuplicado($('#cedula').val());
+        }
+    });
+
+    $('#modalUserClieButton').on('click', () => {
+        _Usuarios.extraerClientes();
+    });
+
+    $('#agregar_clientes_us').on('click', () => {
+        _Usuarios.incluirCliente($('#clientesAsgUsu').val());
+    });
+
+    $('#contrasena').keyup(function (e) {
+
+        var strongRegex = new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$", "g");
+        var mediumRegex = new RegExp("^(?=.{7,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$", "g");
+        var enoughRegex = new RegExp("(?=.{8,}).*", "g");
+        var small = document.querySelector("#smallTextPassword");
+        
+        if (false == enoughRegex.test($(this).val())) {
+            small.setAttribute("style","color:red;");
+            $('#smallTextPassword').html('La contraseña debe tener al menos 8 caracteres.');
+        } else if (strongRegex.test($(this).val())) {
+            small.setAttribute("style","color:green;");
+            $('#smallTextPassword').html('La contraseña es excelente.');
+        } else if (mediumRegex.test($(this).val())) {
+            small.setAttribute("style","color:orange;");
+            $('#smallTextPassword').html('La contraseña buena.');
+        } else {
+            small.setAttribute("style","color:red;");
+            $('#smallTextPassword').html('La contraseña es muy debil.');
         }
     });
 
