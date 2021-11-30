@@ -118,7 +118,7 @@ var fns = module.exports = {
                 }).then(([clienteData]) => {
                     if (_.size(clienteData) >= 1) {
                         if (clienteData[0].contrasena == md5(data.contrasena)) {
-                            chatbot.query(process.env.DATEBASE_ENCODING + "DELETE FROM usuarios WHERE ID = ?", {
+                            chatbot.query(process.env.DATEBASE_ENCODING + "DELETE FROM usuarios WHERE id = ?", {
                                 replacements: [data.id]
                             }).then(([DelClient]) => {
                                 resolve(true);
@@ -137,6 +137,18 @@ var fns = module.exports = {
         return new Promise(
             (resolve, reject) => {
               log(data)
+            }
+        );
+    },
+    usuariosextraerUsuariosId: async function (data) {
+        return new Promise(
+            (resolve, reject) => {
+              log(data)
+              chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM ", {
+                replacements: [data.idusuario]
+            }).then(([DelClient]) => {
+
+            });
             }
         );
     },

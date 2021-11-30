@@ -55,4 +55,11 @@ router.post('/usuario/UsuarioCliente', (req, res) => {
     })();
 });
 
+router.post('/clientes/extraerUsuariosId', (req, res) => {
+    (async () => {
+        let resp = await fns.usuariosextraerUsuariosId(req.body);
+        res.send(resp);
+    })();
+});
+
 module.exports = router;

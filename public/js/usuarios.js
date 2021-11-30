@@ -3,6 +3,7 @@ var _Usuarios = (function () {
     var tableClientesUS;
     var tableModulosUS;
     var tablePermisosUS;
+    var idUserUpdate;
 
     _columnsUsu = [
         { "width": "5%" },
@@ -27,10 +28,22 @@ var _Usuarios = (function () {
         searching: true,
         ordering: true,
         paging: true,
+        select: true,
         destroy: true,
         pageLength: 10,
         columns: _columnsUsu,
         order: [[1, 'desc']]
+    });
+
+    $('#modalUserClieButton').on('click', ()=>{
+        var data = TableUsuarios.rows('.selected').data();
+        if(data.length == 0){
+            _Globals.alertProcess("error", "!Error", "Debe seleccionar un usuario de la tabla.");
+            return;
+        }
+        idUserUpdate = data[0][1];
+        _Usuarios.extraerClientes();
+        _Usuarios.extraerClientesId(idUserUpdate);
     });
 
     tableClientesUS = $("#tableClientesUS").DataTable({
@@ -225,6 +238,22 @@ var _Usuarios = (function () {
                 $.each(data, function (i, e) {
                     $('#clientesAsgUsu').append('<option value="' + e.id + '">' + e.razon_social + '</option>');
                 });
+                $('#modalUsuariosClientesRela').modal('show');
+                Swal.close();
+            }
+        });
+    }
+
+    var extraerClientesId = (id)=>{
+        $.ajax({
+            type: "POST",
+            url: "/clientes/extraerUsuariosId/",
+            data: {"idusuario" : id},
+            beforeSend: function () {
+                _Globals.alertWait();
+            },
+            success: function (r) {
+                console.log(r);
                 Swal.close();
             }
         });
@@ -252,7 +281,8 @@ var _Usuarios = (function () {
         eliminarUsuario: eliminarUsuario,
         validarDuplicado: validarDuplicado,
         extraerClientes: extraerClientes,
-        incluirCliente: incluirCliente
+        incluirCliente: incluirCliente,
+        extraerClientesId:extraerClientesId
     }
 
 })(jQuery);
@@ -276,10 +306,6 @@ $(document).ready(function () {
         if ($('#cedula').val() != "") {
             _Usuarios.validarDuplicado($('#cedula').val());
         }
-    });
-
-    $('#modalUserClieButton').on('click', () => {
-        _Usuarios.extraerClientes();
     });
 
     $('#agregar_clientes_us').on('click', () => {
