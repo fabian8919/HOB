@@ -4,7 +4,8 @@ var _Modulos = (function () {
     _columnsMod = [
         {"width": "10%"},
         {"width": "30%"},
-        {"width": "60%"}
+        {"width": "30%"},
+        {"width": "30%"}
     ];
 
     TableModulos = $("#tableModulos").DataTable({
@@ -20,7 +21,8 @@ var _Modulos = (function () {
         order: [[1, 'asc']]
     });
 
-    var drawTable = () =>{        
+    var drawTable = () =>{    
+            
         $.ajax({
             type:"POST",
             url: "/modulos/extraerData/",
@@ -38,6 +40,7 @@ var _Modulos = (function () {
                         optHerramientas,
                         e.id_modulo,
                         e.nombre_modulo,
+                        e.modulo_padre
                     ]);
                 });
                 TableModulos.draw();
@@ -62,6 +65,7 @@ var _Modulos = (function () {
                 if(data){
                     $("#Modulos_id").val(data[0].id_modulo);
                     $("#Modulos_nombre").val(data[0].nombre_modulo);
+                    traerModulosPadre(data[0].modulo_padre);
                     $("#modalModulos").modal("show");
                     Swal.close();
                 }
@@ -140,11 +144,11 @@ var _Modulos = (function () {
             },
             success:function(r){
                 var data = JSON.parse(r);
-                console.log(data)
                 if(data){
                     $.each(data, function(key, val){
                         $('#Modulos_relPadre').append('<option value="'+ data[key].id_modulo_padre+ '">'+data[key].nombre+'</option>')
                     });
+                    $('#Modulos_relPadre option[value="'+id+'"]').prop('selected', 'selected');
                 }
             }
         });    
@@ -162,11 +166,9 @@ var _Modulos = (function () {
 
 $(document).ready(function () {
 
-    $('#modalModulos').on('shown.bs.modal', function (e) {
-        _Modulos.traerModulosPadre();
-    })
-
+    _Modulos.traerModulosPadre('');
     _Modulos.drawTable();
+    
     $('#form-modulos').on('submit', (e)=>{
         e.preventDefault();
         _Modulos.modulos();

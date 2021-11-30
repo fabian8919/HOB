@@ -15,11 +15,11 @@ app.use(session({
 /* inicio */
 router.get('/', (req, res) => {
     log(req.session)
-    if(req.session.userid != null){
+    // if(req.session.userid != null){
         res.render('index');
-    } else {
-        res.render('login');
-    }
+    // } else {
+    //     res.render('login');
+    // }
 });
 
 module.exports = router;
