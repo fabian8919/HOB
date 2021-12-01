@@ -62,4 +62,11 @@ router.post('/clientes/extraerUsuariosId', (req, res) => {
     })();
 });
 
+router.post('/usuario/QuitarUsuarioCliente', (req, res) => {
+    (async () => {
+        let resp = await fns.removeUserClient(req.body);
+        res.send(resp);
+    })();
+});
+
 module.exports = router;

@@ -17,8 +17,8 @@ var _Usuarios = (function () {
     ];
 
     _columnsUsuC = [
-        { "width": "20%" },
-        { "width": "80%" }
+        { "width": "90%" },
+        { "width": "10%" }
     ];
 
     TableUsuarios = $("#tableUsuarios").DataTable({
@@ -35,9 +35,9 @@ var _Usuarios = (function () {
         order: [[1, 'desc']]
     });
 
-    $('#modalUserClieButton').on('click', ()=>{
+    $('#modalUserClieButton').on('click', () => {
         var data = TableUsuarios.rows('.selected').data();
-        if(data.length == 0){
+        if (data.length == 0) {
             _Globals.alertProcess("error", "!Error", "Debe seleccionar un usuario de la tabla.");
             return;
         }
@@ -236,7 +236,7 @@ var _Usuarios = (function () {
                 var data = JSON.parse(r);
                 $('#clientesAsgUsu').append('<option value="">Seleccionar</option>');
                 $.each(data, function (i, e) {
-                    $('#clientesAsgUsu').append('<option value="' + e.id + '">' + e.razon_social + '</option>');
+                    $('#clientesAsgUsu').append('<option value="' + e.nit + '">' + e.razon_social + '</option>');
                 });
                 $('#modalUsuariosClientesRela').modal('show');
                 Swal.close();
@@ -244,34 +244,106 @@ var _Usuarios = (function () {
         });
     }
 
-    var extraerClientesId = (id)=>{
+    var extraerClientesId = (id) => {
         $.ajax({
             type: "POST",
             url: "/clientes/extraerUsuariosId/",
-            data: {"idusuario" : id},
+            data: { "idusuario": id },
             beforeSend: function () {
+                tableClientesUS.rows().clear().draw();
                 _Globals.alertWait();
             },
             success: function (r) {
-                console.log(r);
+                if (!r) {
+                    return;
+                } else if (r.error) {
+                    _Globals.alertProcess("error", "!Error", r.error);
+                } else {
+                    $.each(r, function (i, e) {
+                        tableClientesUS.row.add([
+                            e.razon_social,
+                            '<a href="#" onclick="_Usuarios.desAsociarCliente(' + e.nit + ')"><span style="font-size:15px;color:red;"><i class="fas fa-trash"></i> Eliminar</span></a>'
+                        ]);
+                    });
+                    tableClientesUS.draw();
+                }
                 Swal.close();
             }
         });
     }
 
     var incluirCliente = (idcliente) => {
+        if(!idcliente){
+            _Globals.alertProcess("error", "!Error", "Debe seleccionar un cliente.");
+            return;
+        }
         $.ajax({
             type: "POST",
             url: "/usuario/UsuarioCliente/",
-            data: { "idcliente": idcliente },
+            data: { "nitcliente": idcliente, "idusuario": idUserUpdate },
             beforeSend: function () {
                 _Globals.alertWait();
             },
             success: function (r) {
-                console.log(r);
-                Swal.close();
+                if (r.error) {
+                    _Globals.alertProcess("error", "!Error", r.error);
+                } else if (r.exito) {
+                    _Globals.alertProcess("success", "!Bien", r.exito);
+                    _Usuarios.extraerClientesId(idUserUpdate);
+                }
             }
         });
+    }
+
+    var desAsociarCliente = (nit) => {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        });
+
+        swalWithBootstrapButtons.fire({
+            title: '¿Estas seguro de eliminar este registro?',
+            text: "Se requiere confirmación del usuario.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Si, Eliminarlo!',
+            cancelButtonText: 'No, Cancelar!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "/usuario/QuitarUsuarioCliente/",
+                    data: { "nitcliente": nit, "idusuario": idUserUpdate },
+                    beforeSend: function () {
+                        _Globals.alertWait();
+                    },
+                    success: function (r) {
+                        if (r.error) {
+                            _Globals.alertProcess("error", "!Error", r.error);
+                        } else if (r.exito) {
+                            _Usuarios.extraerClientesId(idUserUpdate);
+                            swalWithBootstrapButtons.fire(
+                                'Eliminado!',
+                                'El proceso fue exitoso.',
+                                'success'
+                            );
+                        }
+                    }
+                });
+            } else if (
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelado',
+                    'El registro se ha salvado :)',
+                    'error'
+                )
+            }
+        })
     }
 
     return {
@@ -282,7 +354,8 @@ var _Usuarios = (function () {
         validarDuplicado: validarDuplicado,
         extraerClientes: extraerClientes,
         incluirCliente: incluirCliente,
-        extraerClientesId:extraerClientesId
+        extraerClientesId: extraerClientesId,
+        desAsociarCliente: desAsociarCliente
     }
 
 })(jQuery);
@@ -318,18 +391,18 @@ $(document).ready(function () {
         var mediumRegex = new RegExp("^(?=.{7,})(((?=.*[A-Z])(?=.*[a-z]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[0-9]))).*$", "g");
         var enoughRegex = new RegExp("(?=.{8,}).*", "g");
         var small = document.querySelector("#smallTextPassword");
-        
+
         if (false == enoughRegex.test($(this).val())) {
-            small.setAttribute("style","color:red;");
+            small.setAttribute("style", "color:red;");
             $('#smallTextPassword').html('La contraseña debe tener al menos 8 caracteres.');
         } else if (strongRegex.test($(this).val())) {
-            small.setAttribute("style","color:green;");
+            small.setAttribute("style", "color:green;");
             $('#smallTextPassword').html('La contraseña es excelente.');
         } else if (mediumRegex.test($(this).val())) {
-            small.setAttribute("style","color:orange;");
+            small.setAttribute("style", "color:orange;");
             $('#smallTextPassword').html('La contraseña buena.');
         } else {
-            small.setAttribute("style","color:red;");
+            small.setAttribute("style", "color:red;");
             $('#smallTextPassword').html('La contraseña es muy debil.');
         }
     });

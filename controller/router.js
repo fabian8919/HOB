@@ -22,4 +22,9 @@ router.get('/', (req, res) => {
     // }
 });
 
+/* salir */
+router.get('/salir', (req, res) => {
+    req.session.destroy();
+});
+
 module.exports = router;

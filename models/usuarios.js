@@ -9,6 +9,7 @@ const yellow = colors.yellow;
 const cyan = colors.cyan;
 const green = colors.green;
 const session = require("express-session");
+const { response } = require('express');
 
 /* Conectando el servidor a las sesiones */
 app.use(session({
@@ -21,7 +22,7 @@ var fns = module.exports = {
     usuarios: async function (data) {
         return new Promise(
             (resolve, reject) => {
-                
+
                 var activo = (data.activo == "on") ? true : false;
                 var bloqueado = (!data.bloqueado) ? false : (data.bloqueado == "on") ? true : false;
 
@@ -39,7 +40,7 @@ var fns = module.exports = {
                             }
                         });
                     } else {
-                        if(data.contrasena == ""){
+                        if (data.contrasena == "") {
                             chatbot.query(process.env.DATEBASE_ENCODING + "UPDATE usuarios SET cedula = ?, nombre = ?, correo = ?, activo = ?, bloqueado = ? WHERE cedula = ? RETURNING id", {
                                 replacements: [data.cedula, data.nombre, data.correo, activo, bloqueado, data.cedula]
                             }).then(([insertUser]) => {
@@ -136,19 +137,84 @@ var fns = module.exports = {
     usuariosClienteUsuario: async function (data) {
         return new Promise(
             (resolve, reject) => {
-              log(data)
+                resp = {}
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios WHERE id = ?", {
+                    replacements: [data.idusuario]
+                }).then(([clienteData]) => {
+                    if (_.size(clienteData) >= 1) {
+                        chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM clientes_usuarios WHERE cliente_nit = ? AND usuario_cedula = ?", {
+                            replacements: [data.nitcliente, clienteData[0].cedula]
+                        }).then(([dataIni]) => {
+                            if (_.size(dataIni) >= 1) {
+                                resp.error = "El cliente ya esta asignado al usuario";
+                                resolve(resp);
+                            } else {
+                                chatbot.query(process.env.DATEBASE_ENCODING + "INSERT INTO clientes_usuarios (cliente_nit, usuario_cedula) VALUES (?,?) RETURNING id", {
+                                    replacements: [data.nitcliente, clienteData[0].cedula]
+                                }).then(([insertCU]) => {
+                                    if (_.size(insertCU) >= 1) {
+                                        resp.exito = "Proceso realizado con exito";
+                                    } else {
+                                        resp.error = "Hubo un error al guardar la información.";
+                                    }
+                                    resolve(resp);
+                                });
+                            }
+                        });
+                    } else {
+                        resp.error = "El cliente no existe.";
+                        resolve(resp);
+                    }
+                });
             }
         );
     },
     usuariosextraerUsuariosId: async function (data) {
         return new Promise(
             (resolve, reject) => {
-              log(data)
-              chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM ", {
-                replacements: [data.idusuario]
-            }).then(([DelClient]) => {
+                resp = {}
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios WHERE id = ?", {
+                    replacements: [data.idusuario]
+                }).then(([clienteData]) => {
+                    if (_.size(clienteData) >= 1) {
+                        chatbot.query(process.env.DATEBASE_ENCODING + "SELECT c.nit, c.razon_social FROM clientes c INNER JOIN clientes_usuarios cu ON cu.cliente_nit = c.nit WHERE usuario_cedula = ? ", {
+                            replacements: [clienteData[0].cedula]
+                        }).then(([RelaData]) => {
+                            if (_.size(RelaData) >= 1) {
+                                resolve(RelaData);
+                            } else {
+                                resolve(false);
+                            }
+                        });
+                    } else {
+                        resp.error = "El usuario no existe";
+                        resolve(resp);
+                    }
+                });
 
-            });
+            }
+        );
+    },
+    removeUserClient: async function (data) {
+        return new Promise(
+            (resolve, reject) => {
+                resp = {}
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios WHERE id = ?", {
+                    replacements: [data.idusuario]
+                }).then(([clienteData]) => {
+                    if (_.size(clienteData) >= 1) {
+                        chatbot.query(process.env.DATEBASE_ENCODING + "DELETE FROM clientes_usuarios WHERE  cliente_nit = ? AND usuario_cedula = ?", {
+                            replacements: [data.nitcliente, clienteData[0].cedula]
+                        }).then(([deleteCU]) => {
+                            resp.exito = "Proceso realizado con exito";
+                            resolve(resp);
+                        });
+                    } else {
+                        resp.error = "El cliente no existe.";
+                        resolve(resp);
+                    }
+                });
+
             }
         );
     },

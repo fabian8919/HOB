@@ -22,6 +22,7 @@ var fns = module.exports = {
     login: async function (data) {
         return new Promise(
             (resolve, reject) => {
+                resp = {}
                 chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios WHERE cedula = ?", {
                     replacements: [data.username]
                 }).then(([clienteData]) => {
@@ -33,27 +34,17 @@ var fns = module.exports = {
                             (async () => {
                                 let int = await fns.intentos(data.username);
                                 if (int == 0) {
-                                    resp = {
-                                        "error": "El usuario se encuentra bloqueado."
-                                    }
-                                    resolve(resp);
+                                    resp.error = "El usuario se encuentra bloqueado.";
                                 } else if (int > 3) {
-                                    resp = {
-                                        "error": "El usuario se encuentra bloqueado."
-                                    }
-                                    resolve(resp);
+                                    resp.error = "El usuario se encuentra bloqueado.";
                                 } else {
-                                    resp = {
-                                        "error": "La contraseña es incorrecta."
-                                    }
-                                    resolve(resp);
+                                    resp.error = "La contraseña es incorrecta.";
                                 }
+                                resolve(resp);
                             })();
                         }
                     } else {
-                        resp = {
-                            "error": "El usuario ingresado no existe."
-                        }
+                        resp.error = "El usuario ingresado no existe.";
                         resolve(resp);
                     }
                 });
