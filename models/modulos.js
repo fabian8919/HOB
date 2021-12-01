@@ -25,8 +25,8 @@ var fns = module.exports = {
                     replacements: [data.Modulos_id]
                 }).then(([modulosData]) => {
                     if(_.size(modulosData) <= 0){
-                        chatbot.query(process.env.DATEBASE_ENCODING + "INSERT INTO permisos_modulos(id_modulo, nombre_modulo, modulo_padre) VALUES (?, ?, ?) RETURNING id", {
-                            replacements: [data.Modulos_id, data.Modulos_nombre, data.Modulos_relPadre]
+                        chatbot.query(process.env.DATEBASE_ENCODING + "INSERT INTO permisos_modulos(id_modulo, nombre_modulo, modulo_padre, icono) VALUES (?, ?, ?, ?) RETURNING id", {
+                            replacements: [data.Modulos_id, data.Modulos_nombre, data.Modulos_relPadre, data.Modulos_icono]
                         }).then(([insertModulo]) => {
                             if(_.size(insertModulo) == 1){
                                 resolve(true)
@@ -35,8 +35,8 @@ var fns = module.exports = {
                             }
                         }); 
                     } else {
-                        chatbot.query(process.env.DATEBASE_ENCODING + "UPDATE permisos_modulos SET id_modulo = ?, nombre_modulo = ?, modulo_padre = ? WHERE id_modulo = ? RETURNING id", {
-                            replacements: [data.Modulos_id, data.Modulos_nombre, data.Modulos_relPadre, data.Modulos_id]
+                        chatbot.query(process.env.DATEBASE_ENCODING + "UPDATE permisos_modulos SET id_modulo = ?, nombre_modulo = ?, modulo_padre = ?, icono = ? WHERE id_modulo = ? RETURNING id", {
+                            replacements: [data.Modulos_id, data.Modulos_nombre, data.Modulos_relPadre, data.Modulos_icono, data.Modulos_id]
                         }).then(([updateModulo]) => {
                             if(_.size(updateModulo) == 1){
                                 resolve(true);

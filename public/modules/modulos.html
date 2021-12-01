@@ -1,3 +1,53 @@
+<style>
+.icon-picker-list {
+	display: flex;
+	flex-flow: row wrap;
+	list-style: none;
+	padding-left: 0;
+}
+
+.icon-picker-list li {
+	display: flex;
+	flex: 0 0 20%;
+	float: left;
+	width: 20%;
+}
+
+.icon-picker-list a {
+	background-color: #f9f9f9;
+	border: 1px solid #fff;
+	color: black;
+	display: block;
+	flex: 1 1 auto;
+	font-size: 12px;
+	line-height: 1.4;
+	min-height: 100px;
+	padding: 10px;
+	text-align: center;
+	user-select: none;
+}
+
+.icon-picker-list a:hover,
+.icon-picker-list a.active{
+	background-color: #5f76e8; 
+	color: #fff;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.icon-picker-list .fas {
+	font-size: 24px;
+	margin-bottom: 10px;
+	margin-top: 5px;
+}
+
+.icon-picker-list .name-class {
+	display: block;
+	text-align: center;
+	word-wrap: break-word;
+}
+
+</style>
 <div class="page-breadcrumb">
     <h1>Modulo Administración de Módulos</h1>
 </div>
@@ -28,6 +78,7 @@
                                     <th>ID Modulo</th>
                                     <th>Nombre</th>
                                     <th>Módulo Padre</th>
+                                    <th>Icono</th>
                                 </tr>
                             </thead>
                             <tbody class="border border-primary">
@@ -40,8 +91,7 @@
     </div>
 </div>
 <form id="form-modulos" method="post" action="/modulos/">
-    <div id="modalModulos" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalModulosLabel"
-        aria-hidden="true">
+    <div id="modalModulos" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalModulosLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header modal-colored-header bg-primary">
@@ -68,6 +118,16 @@
                                     <select class="form-control" name="Modulos_relPadre" id="Modulos_relPadre"></select>
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-primary picker-button">Pick an Icon</button>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" id="Modulos_icono" name="Modulos_icono" placeholder="Icono seleccionado" required>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -79,4 +139,30 @@
         </div>
     </div>
 </form>
+
+<div id="iconPicker" class="modal fade">
+	<div class="modal-dialog modal-full-width">
+		<div class="modal-content">
+            <div class="modal-header modal-colored-header bg-primary">
+                <h4 class="modal-title">Icon Picker</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+			<div class="modal-body">
+                <ul class="icon-picker-list">
+                    <li>
+                        <a data-class="{{item}}" data-index="{{index}}">
+                            <span class="{{item}}"></span>
+                            <span class="name-class">{{item}}</span>
+                        </a>                        
+                    </li>
+                </ul>
+				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script src="js/modulos.js"></script>
