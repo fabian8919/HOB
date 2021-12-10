@@ -19,11 +19,35 @@
 
         <%- include('../public/assets/const/nav'); %>
 
-            <%- include('../public/assets/const/sidebar'); %>
-                <div id="contentPage" class="page-wrapper">
-                    
+        <!-- Inicio de Sidebar START -->
+        <aside class="left-sidebar" data-sidebarbg="skin6">
+            <div class="scroll-sidebar" data-sidebarbg="skin6">
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li id="index" class="sidebar-item"> <a class="sidebar-link"
+                                onclick="_Admin.traerVista('index')" href="javascript:void(0)" aria-expanded="false"><i
+                                    class="fas fa-home"></i><span class="hide-menu">Inicio</span></a></li>
+                        <li class="list-divider"></li>
+                        <% padres.forEach(function(pdr) { %>
+                            <li class="nav-small-cap"><span class="hide-menu"><%= pdr.padre %></span></li>
+                            <% modulos.forEach(function(hj) { %>
+                                <% if(hj.padre == pdr.padre){ %>
+                                    <li id="<%= hj.namemol %>" class="sidebar-item"> <a class="sidebar-link"
+                                            onclick="_Admin.traerVista('<%= hj.namemol %>')" href="javascript:void(0)"
+                                            aria-expanded="false"><i class="<%= hj.icono %>"></i><span
+                                                class="hide-menu"><%= hj.namemol %></span></a>
+                                    </li>
+                                <% } %>
+                            <% }); %>
+                        <% }); %>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+        <!-- Inicio de Sidebar END -->
+        <div id="contentPage" class="page-wrapper">
 
-                </div>
+        </div>
     </div>
     <%- include('../public/assets/const/footer'); %>
 </body>

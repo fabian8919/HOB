@@ -5,20 +5,38 @@ var _Usuarios = (function () {
     var tablePermisosUS;
     var idUserUpdate;
 
-    _columnsUsu = [
-        { "width": "5%" },
-        { "width": "5%" },
-        { "width": "15%" },
-        { "width": "20%" },
-        { "width": "15%" },
-        { "width": "15%" },
-        { "width": "10%" },
-        { "width": "15%" },
+    _columnsUsu = [{
+            "width": "5%"
+        },
+        {
+            "width": "5%"
+        },
+        {
+            "width": "15%"
+        },
+        {
+            "width": "20%"
+        },
+        {
+            "width": "15%"
+        },
+        {
+            "width": "15%"
+        },
+        {
+            "width": "10%"
+        },
+        {
+            "width": "15%"
+        },
     ];
 
-    _columnsUsuC = [
-        { "width": "90%" },
-        { "width": "10%" }
+    _columnsUsuC = [{
+            "width": "90%"
+        },
+        {
+            "width": "10%"
+        }
     ];
 
     TableUsuarios = $("#tableUsuarios").DataTable({
@@ -32,7 +50,9 @@ var _Usuarios = (function () {
         destroy: true,
         pageLength: 10,
         columns: _columnsUsu,
-        order: [[1, 'desc']]
+        order: [
+            [1, 'desc']
+        ]
     });
 
     $('#modalUserClieButton').on('click', () => {
@@ -56,7 +76,9 @@ var _Usuarios = (function () {
         destroy: true,
         pageLength: 10,
         columns: _columnsUsuC,
-        order: [[1, 'asc']]
+        order: [
+            [0, 'asc']
+        ]
     });
 
     tableModulosUS = $("#tableModulosUS").DataTable({
@@ -69,7 +91,21 @@ var _Usuarios = (function () {
         destroy: true,
         pageLength: 10,
         columns: _columnsUsuC,
-        order: [[1, 'asc']]
+        order: [
+            [0, 'asc']
+        ]
+    });
+
+    $('#modalAsocialModulosButton').on('click', () => {
+        var data = TableUsuarios.rows('.selected').data();
+        if (data.length == 0) {
+            _Globals.alertProcess("error", "!Error", "Debe seleccionar un usuario de la tabla.");
+            return;
+        }
+        idUserUpdate = data[0][1];
+        $('#modalAsocialModulosRela').modal('show');
+        _Usuarios.extraerModulosId(idUserUpdate);
+        _Usuarios.extraerModulos();
     });
 
     tablePermisosUS = $("#tablePermisosUS").DataTable({
@@ -82,7 +118,21 @@ var _Usuarios = (function () {
         destroy: true,
         pageLength: 10,
         columns: _columnsUsuC,
-        order: [[1, 'asc']]
+        order: [
+            [1, 'asc']
+        ]
+    });
+
+    $('#modalAsocialPermisosBtn').on('click', () => {
+        var data = TableUsuarios.rows('.selected').data();
+        if (data.length == 0) {
+            _Globals.alertProcess("error", "!Error", "Debe seleccionar un usuario de la tabla.");
+            return;
+        }
+        idUserUpdate = data[0][1];
+        $('#modalUsuariosPermisosRela').modal('show');
+        _Usuarios.extraerPermisosId(idUserUpdate);
+        _Usuarios.extraerPermisos();
     });
 
     var drawTable = () => {
@@ -150,7 +200,9 @@ var _Usuarios = (function () {
         $.ajax({
             type: "POST",
             url: "/usuarios/ExtraerId/",
-            data: { "id": id },
+            data: {
+                "id": id
+            },
             beforeSend: function () {
                 _Globals.alertWait();
             },
@@ -195,7 +247,10 @@ var _Usuarios = (function () {
                     $.ajax({
                         type: "POST",
                         url: "/usuarios/ValidarContrasena/",
-                        data: { "contrasena": pass, "id": id },
+                        data: {
+                            "contrasena": pass,
+                            "id": id
+                        },
                         success: function (r) {
                             if (!r) {
                                 _Globals.NotifyError("La contraseña es incorrecta.");
@@ -215,7 +270,9 @@ var _Usuarios = (function () {
         $.ajax({
             type: "POST",
             url: "/usuarios/DuplicadoCedula/",
-            data: { "cedula": cedula },
+            data: {
+                "cedula": cedula
+            },
             success: function (r) {
                 if (!r) {
                     _Globals.NotifyInfo("El usuario ya existe, los datos que ingrese actualizarán el usuario.");
@@ -248,7 +305,9 @@ var _Usuarios = (function () {
         $.ajax({
             type: "POST",
             url: "/clientes/extraerUsuariosId/",
-            data: { "idusuario": id },
+            data: {
+                "idusuario": id
+            },
             beforeSend: function () {
                 tableClientesUS.rows().clear().draw();
                 _Globals.alertWait();
@@ -272,15 +331,102 @@ var _Usuarios = (function () {
         });
     }
 
+    var extraerModulosId = (id) => {
+        $.ajax({
+            type: "POST",
+            url: "/clientes/extraerModulosId/",
+            data: {
+                "idusuario": id
+            },
+            beforeSend: function () {
+                tableModulosUS.rows().clear().draw();
+                _Globals.alertWait();
+            },
+            success: function (r) {
+                if (!r) {
+                    return;
+                } else if (r.error) {
+                    _Globals.alertProcess("error", "!Error", r.error);
+                } else {
+                    $.each(r, function (i, e) {
+                        tableModulosUS.row.add([
+                            e.nombre_modulo,
+                            '<a href="#" onclick="_Usuarios.desAsociarModulo(' + "'" + e.id_modulo + "'" + ')"><span style="font-size:15px;color:red;"><i class="fas fa-trash"></i> Eliminar</span></a>'
+                        ]);
+                    });
+                    tableModulosUS.draw();
+                }
+                Swal.close();
+            }
+        });
+    }
+
+    var desAsociarModulo = (idmodulo) => {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        });
+
+        swalWithBootstrapButtons.fire({
+            title: '¿Estas seguro de eliminar este registro?',
+            text: "Se requiere confirmación del usuario.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Si, Eliminarlo!',
+            cancelButtonText: 'No, Cancelar!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "/usuario/QuitarUsuarioModulo/",
+                    data: {
+                        "idmodulo": idmodulo,
+                        "idusuario": idUserUpdate
+                    },
+                    beforeSend: function () {
+                        _Globals.alertWait();
+                    },
+                    success: function (r) {
+                        if (r.error) {
+                            _Globals.alertProcess("error", "!Error", r.error);
+                        } else if (r.exito) {
+                            _Usuarios.extraerModulosId(idUserUpdate);
+                            swalWithBootstrapButtons.fire(
+                                'Eliminado!',
+                                'El proceso fue exitoso.',
+                                'success'
+                            );
+                        }
+                    }
+                });
+            } else if (
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelado',
+                    'El registro se ha salvado :)',
+                    'error'
+                )
+            }
+        })
+    }
+
     var incluirCliente = (idcliente) => {
-        if(!idcliente){
+        if (!idcliente) {
             _Globals.alertProcess("error", "!Error", "Debe seleccionar un cliente.");
             return;
         }
         $.ajax({
             type: "POST",
             url: "/usuario/UsuarioCliente/",
-            data: { "nitcliente": idcliente, "idusuario": idUserUpdate },
+            data: {
+                "nitcliente": idcliente,
+                "idusuario": idUserUpdate
+            },
             beforeSend: function () {
                 _Globals.alertWait();
             },
@@ -317,7 +463,10 @@ var _Usuarios = (function () {
                 $.ajax({
                     type: "POST",
                     url: "/usuario/QuitarUsuarioCliente/",
-                    data: { "nitcliente": nit, "idusuario": idUserUpdate },
+                    data: {
+                        "nitcliente": nit,
+                        "idusuario": idUserUpdate
+                    },
                     beforeSend: function () {
                         _Globals.alertWait();
                     },
@@ -326,6 +475,182 @@ var _Usuarios = (function () {
                             _Globals.alertProcess("error", "!Error", r.error);
                         } else if (r.exito) {
                             _Usuarios.extraerClientesId(idUserUpdate);
+                            swalWithBootstrapButtons.fire(
+                                'Eliminado!',
+                                'El proceso fue exitoso.',
+                                'success'
+                            );
+                        }
+                    }
+                });
+            } else if (
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelado',
+                    'El registro se ha salvado :)',
+                    'error'
+                )
+            }
+        })
+    }
+
+    var extraerModulos = () => {
+        $.ajax({
+            type: "POST",
+            url: "/modulos/extraerData/",
+            beforeSend: function () {
+                _Globals.alertWait();
+            },
+            success: function (r) {
+                var data = JSON.parse(r);
+                $('#ModulosAsgUsu').empty();
+                var data = JSON.parse(r);
+                $('#ModulosAsgUsu').append('<option value="">Seleccionar</option>');
+                $.each(data, function (i, e) {
+                    $('#ModulosAsgUsu').append('<option value="' + e.id_modulo + '">' + e.nombre_modulo + '</option>');
+                });
+                Swal.close();
+            }
+        });
+    }
+
+    var incluirModulo = (idcliente) => {
+        if (!idcliente) {
+            _Globals.alertProcess("error", "!Error", "Debe seleccionar un modulo.");
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/usuario/UsuarioModulo/",
+            data: {
+                "moduloid": idcliente,
+                "idusuario": idUserUpdate
+            },
+            beforeSend: function () {
+                _Globals.alertWait();
+            },
+            success: function (r) {
+                if (r.error) {
+                    _Globals.alertProcess("error", "!Error", r.error);
+                } else if (r.exito) {
+                    _Globals.alertProcess("success", "!Bien", r.exito);
+                    _Usuarios.extraerModulosId(idUserUpdate);
+                }
+            }
+        });
+    }
+
+    var extraerPermisos = () => {
+        $.ajax({
+            type: "POST",
+            url: "/permisos/extraerData/",
+            beforeSend: function () {
+                _Globals.alertWait();
+            },
+            success: function (r) {
+                var data = JSON.parse(r);
+                $('#PermisosAsgUsu').empty();
+                var data = JSON.parse(r);
+                $('#PermisosAsgUsu').append('<option value="">Seleccionar</option>');
+                $.each(data, function (i, e) {
+                    $('#PermisosAsgUsu').append('<option value="' + e.id_permiso + '">' + e.nombre + '</option>');
+                });
+                Swal.close();
+            }
+        });
+    }
+
+    var extraerPermisosId = (id) => {
+        $.ajax({
+            type: "POST",
+            url: "/usuarios/extraerPermisosId/",
+            data: {
+                "idusuario": id
+            },
+            beforeSend: function () {
+                tablePermisosUS.rows().clear().draw();
+                _Globals.alertWait();
+            },
+            success: function (r) {
+                if (!r) {
+                    return;
+                } else if (r.error) {
+                    _Globals.alertProcess("error", "!Error", r.error);
+                } else {
+                    $.each(r, function (i, e) {
+                        tablePermisosUS.row.add([
+                            e.nombre,
+                            '<a href="#" onclick="_Usuarios.desAsociarPermiso(' + "'" + e.id_permiso + "'" + ')"><span style="font-size:15px;color:red;"><i class="fas fa-trash"></i> Eliminar</span></a>'
+                        ]);
+                    });
+                    tablePermisosUS.draw();
+                }
+                Swal.close();
+            }
+        });
+    }
+
+    var incluirPermiso = (idpermiso) => {
+        if (!idpermiso) {
+            _Globals.alertProcess("error", "!Error", "Debe seleccionar un modulo.");
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/usuario/UsuarioPermiso/",
+            data: {
+                "permisoid": idpermiso,
+                "idusuario": idUserUpdate
+            },
+            beforeSend: function () {
+                _Globals.alertWait();
+            },
+            success: function (r) {
+                if (r.error) {
+                    _Globals.alertProcess("error", "!Error", r.error);
+                } else if (r.exito) {
+                    _Globals.alertProcess("success", "!Bien", r.exito);
+                    _Usuarios.extraerPermisosId(idUserUpdate);
+                }
+            }
+        });
+    }
+
+    var desAsociarPermiso = (idpermiso) => {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        });
+
+        swalWithBootstrapButtons.fire({
+            title: '¿Estas seguro de eliminar este registro?',
+            text: "Se requiere confirmación del usuario.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Si, Eliminarlo!',
+            cancelButtonText: 'No, Cancelar!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "/usuario/QuitarUsuarioPermiso/",
+                    data: {
+                        "idpermiso": idpermiso,
+                        "idusuario": idUserUpdate
+                    },
+                    beforeSend: function () {
+                        _Globals.alertWait();
+                    },
+                    success: function (r) {
+                        if (r.error) {
+                            _Globals.alertProcess("error", "!Error", r.error);
+                        } else if (r.exito) {
+                            _Usuarios.extraerPermisosId(idUserUpdate);
                             swalWithBootstrapButtons.fire(
                                 'Eliminado!',
                                 'El proceso fue exitoso.',
@@ -355,7 +680,15 @@ var _Usuarios = (function () {
         extraerClientes: extraerClientes,
         incluirCliente: incluirCliente,
         extraerClientesId: extraerClientesId,
-        desAsociarCliente: desAsociarCliente
+        desAsociarCliente: desAsociarCliente,
+        extraerModulos: extraerModulos,
+        incluirModulo: incluirModulo,
+        extraerModulosId: extraerModulosId,
+        desAsociarModulo: desAsociarModulo,
+        extraerPermisos: extraerPermisos,
+        extraerPermisosId: extraerPermisosId,
+        incluirPermiso: incluirPermiso,
+        desAsociarPermiso: desAsociarPermiso
     }
 
 })(jQuery);
@@ -383,6 +716,14 @@ $(document).ready(function () {
 
     $('#agregar_clientes_us').on('click', () => {
         _Usuarios.incluirCliente($('#clientesAsgUsu').val());
+    });
+
+    $('#agregar_modulos_us').on('click', () => {
+        _Usuarios.incluirModulo($('#ModulosAsgUsu').val());
+    });
+
+    $('#agregar_permisos_us').on('click', () => {
+        _Usuarios.incluirPermiso($('#PermisosAsgUsu').val());
     });
 
     $('#contrasena').keyup(function (e) {

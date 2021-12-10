@@ -69,4 +69,46 @@ router.post('/usuario/QuitarUsuarioCliente', (req, res) => {
     })();
 });
 
+router.post('/usuario/UsuarioModulo', (req, res) => {
+    (async () => {
+        let resp = await fns.asociarModuloUser(req.body);
+        res.send(resp);
+    })();
+});
+
+router.post('/clientes/extraerModulosId', (req, res) => {
+    (async () => {
+        let resp = await fns.extraerModulosId(req.body);
+        res.send(resp);
+    })();
+});
+
+router.post('/usuario/QuitarUsuarioModulo', (req, res) => {
+    (async () => {
+        let resp = await fns.quitarModuloUsuario(req.body);
+        res.send(resp);
+    })();
+});
+
+router.post('/usuarios/extraerPermisosId/', (req, res) => {
+    (async () => {
+        let resp = await fns.extraerPermisosId(req.body);
+        res.send(resp);
+    })();
+});
+
+router.post('/usuario/UsuarioPermiso/', (req, res) => {
+    (async () => {
+        let resp = await fns.UsuarioPermiso(req.body);
+        res.send(resp);
+    })();
+});
+
+router.post('/usuario/QuitarUsuarioPermiso/', (req, res) => {
+    (async () => {
+        let resp = await fns.QuitarUsuarioPermiso(req.body);
+        res.send(resp);
+    })();
+});
+
 module.exports = router;

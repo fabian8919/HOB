@@ -48,22 +48,8 @@ var _Admin = (function () {
 
     var sidebarControl = (vista)=>{
         $('#sidebarnav li').removeClass("selected");
-        if(vista == 'index'){
-            $('#indexSidebar').addClass("selected");
-            $('#indexWell').html("Bienvenido "+localStorage.getItem('nombre'));
-        } else if(vista == 'clientes'){
-            $('#clientesSidebar').addClass("selected");
-        } else if(vista == 'usuarios'){
-            $('#usuariosSidebar').addClass("selected");
-        } else if(vista == 'permisos'){
-            $('#permisosSidebar').addClass("selected");
-        } else if(vista == 'modulos'){
-            $('#modulosSidebar').addClass("selected");
-        } else if(vista = 'modulos_padre'){
-            $('#modulospadreSidebar').addClass("selected");
-        } else {
-            $('#indexSidebar').addClass("selected");
-        }
+        $('#indexWell').html("Bienvenido "+localStorage.getItem('nombre'));
+        $('#'+vista).addClass("selected");
     }
 
     return {
@@ -86,5 +72,4 @@ $(document).ready(function () {
         $('#indexSidebar').addClass("selected");
     }
     _Admin.traerVista(vista);
-
 });

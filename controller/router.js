@@ -14,17 +14,20 @@ app.use(session({
 
 /* inicio */
 router.get('/', (req, res) => {
-    log(req.session)
-    // if(req.session.userid != null){
-        res.render('index');
-    // } else {
-    //     res.render('login');
-    // }
+    if (req.session.userid != null) {
+        res.render('index', {
+            modulos: req.session.modulos,
+            padres: req.session.padres
+        });
+    } else {
+        res.render('login');
+    }
 });
 
 /* salir */
 router.get('/salir', (req, res) => {
     req.session.destroy();
+    res.redirect('/');
 });
 
 module.exports = router;

@@ -9,7 +9,9 @@ const yellow = colors.yellow;
 const cyan = colors.cyan;
 const green = colors.green;
 const session = require("express-session");
-const { response } = require('express');
+const {
+    response
+} = require('express');
 
 /* Conectando el servidor a las sesiones */
 app.use(session({
@@ -191,7 +193,6 @@ var fns = module.exports = {
                         resolve(resp);
                     }
                 });
-
             }
         );
     },
@@ -215,6 +216,188 @@ var fns = module.exports = {
                     }
                 });
 
+            }
+        );
+    },
+    asociarModuloUser: async function (data) {
+        return new Promise(
+            (resolve, reject) => {
+                resp = {}
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios WHERE id = ?", {
+                    replacements: [data.idusuario]
+                }).then(([userData]) => {
+                    if (_.size(userData) >= 1) {
+                        chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios_permisos_modulos WHERE modulo_id = ? AND cedula_usuario = ?", {
+                            replacements: [data.moduloid, userData[0].cedula]
+                        }).then(([dataIni]) => {
+                            if (_.size(dataIni) >= 1) {
+                                resp.error = "El modulo ya esta asignado al usuario.";
+                                resolve(resp);
+                            } else {
+                                chatbot.query(process.env.DATEBASE_ENCODING + "INSERT INTO usuarios_permisos_modulos (modulo_id, cedula_usuario) VALUES (?,?) RETURNING id", {
+                                    replacements: [data.moduloid, userData[0].cedula]
+                                }).then(([insertCU]) => {
+                                    if (_.size(insertCU) >= 1) {
+                                        resp.exito = "Proceso realizado con exito";
+                                    } else {
+                                        resp.error = "Hubo un error al guardar la información.";
+                                    }
+                                    resolve(resp);
+                                });
+                            }
+                        });
+                    } else {
+                        resp.error = "El cliente no existe.";
+                        resolve(resp);
+                    }
+                });
+            }
+        );
+    },
+    extraerModulosId: async function (data) {
+        return new Promise(
+            (resolve, reject) => {
+                resp = {}
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios WHERE id = ?", {
+                    replacements: [data.idusuario]
+                }).then(([clienteData]) => {
+                    if (_.size(clienteData) >= 1) {
+                        chatbot.query(process.env.DATEBASE_ENCODING + "SELECT c.id_modulo, c.nombre_modulo FROM permisos_modulos c INNER JOIN usuarios_permisos_modulos cu ON cu.modulo_id = c.id_modulo WHERE cedula_usuario = ?", {
+                            replacements: [clienteData[0].cedula]
+                        }).then(([RelaData]) => {
+                            if (_.size(RelaData) >= 1) {
+                                resolve(RelaData);
+                            } else {
+                                resolve(false);
+                            }
+                        });
+                    } else {
+                        resp.error = "El usuario no existe";
+                        resolve(resp);
+                    }
+                });
+            }
+        );
+    },
+    quitarModuloUsuario: async function (data) {
+        return new Promise(
+            (resolve, reject) => {
+                resp = {}
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios WHERE id = ?", {
+                    replacements: [data.idusuario]
+                }).then(([userData]) => {
+                    if (_.size(userData) >= 1) {
+                        chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios_permisos_modulos WHERE modulo_id = ? AND cedula_usuario = ?", {
+                            replacements: [data.idmodulo, userData[0].cedula]
+                        }).then(([dataIni]) => {
+                            if (_.size(dataIni) <= 0) {
+                                resp.error = "El modulo no esta asignado al usuario.";
+                                resolve(resp);
+                            } else {
+                                chatbot.query(process.env.DATEBASE_ENCODING + "DELETE FROM usuarios_permisos_modulos WHERE modulo_id = ? AND cedula_usuario = ?", {
+                                    replacements: [data.idmodulo, userData[0].cedula]
+                                }).then(([insertCU]) => {
+                                    resp.exito = "Proceso realizado con exito";
+                                    resolve(resp);
+                                });
+                            }
+                        });
+                    } else {
+                        resp.error = "El usuario no existe";
+                        resolve(resp);
+                    }
+                });
+            }
+        );
+    },
+    extraerPermisosId: async function (data) {
+        return new Promise(
+            (resolve, reject) => {
+                resp = {}
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios WHERE id = ?", {
+                    replacements: [data.idusuario]
+                }).then(([userData]) => {
+                    if (_.size(userData) >= 1) {
+                        chatbot.query(process.env.DATEBASE_ENCODING + "SELECT pa.id_permiso, pa.nombre FROM permisos_acciones pa INNER JOIN usuarios_permisos_acciones upa ON pa.id_permiso = upa.permiso_id_accion WHERE cedula_usuario = ?", {
+                            replacements: [userData[0].cedula]
+                        }).then(([dataIni]) => {
+                            if (_.size(dataIni) > 0) {
+                                resolve(dataIni);
+                            } else {
+                                resolve(false);
+                            }
+                        });
+                    } else {
+                        resp.error = "El usuario no existe";
+                        resolve(resp);
+                    }
+                });
+            }
+        );
+    },
+    UsuarioPermiso: async function (data) {
+        return new Promise(
+            (resolve, reject) => {
+                resp = {}
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios WHERE id = ?", {
+                    replacements: [data.idusuario]
+                }).then(([userData]) => {
+                    if (_.size(userData) >= 1) {
+                        chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios_permisos_acciones WHERE permiso_id_accion = ? AND cedula_usuario = ?", {
+                            replacements: [data.permisoid, userData[0].cedula]
+                        }).then(([dataIni]) => {
+                            if (_.size(dataIni) >= 1) {
+                                resp.error = "El modulo ya esta asignado al usuario.";
+                                resolve(resp);
+                            } else {
+                                chatbot.query(process.env.DATEBASE_ENCODING + "INSERT INTO usuarios_permisos_acciones (permiso_id_accion, cedula_usuario) VALUES (?,?) RETURNING id", {
+                                    replacements: [data.permisoid, userData[0].cedula]
+                                }).then(([insertCU]) => {
+                                    if (_.size(insertCU) >= 1) {
+                                        resp.exito = "Proceso realizado con exito";
+                                    } else {
+                                        resp.error = "Hubo un error al guardar la información.";
+                                    }
+                                    resolve(resp);
+                                });
+                            }
+                        });
+                    } else {
+                        resp.error = "El cliente no existe.";
+                        resolve(resp);
+                    }
+                });
+            }
+        );
+    },
+    QuitarUsuarioPermiso: async function (data) {
+        return new Promise(
+            (resolve, reject) => {
+                resp = {}
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios WHERE id = ?", {
+                    replacements: [data.idusuario]
+                }).then(([userData]) => {
+                    if (_.size(userData) >= 1) {
+                        chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM usuarios_permisos_acciones WHERE permiso_id_accion = ? AND cedula_usuario = ?", {
+                            replacements: [data.idpermiso, userData[0].cedula]
+                        }).then(([dataIni]) => {
+                            if (_.size(dataIni) <= 0) {
+                                resp.error = "El modulo no esta asignado al usuario.";
+                                resolve(resp);
+                            } else {
+                                chatbot.query(process.env.DATEBASE_ENCODING + "DELETE FROM usuarios_permisos_acciones WHERE permiso_id_accion = ? AND cedula_usuario = ?", {
+                                    replacements: [data.idpermiso, userData[0].cedula]
+                                }).then(([insertCU]) => {
+                                    resp.exito = "Proceso realizado con exito";
+                                    resolve(resp);
+                                });
+                            }
+                        });
+                    } else {
+                        resp.error = "El usuario no existe";
+                        resolve(resp);
+                    }
+                });
             }
         );
     },

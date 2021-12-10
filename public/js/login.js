@@ -12,16 +12,18 @@ var _Login = (function () {
                 _Globals.alertWait();
             },
             success: function (r) {
-                if(r.userid){
+                if (r.error != "") {
+                    _Globals.alertProcess('error', '!Error', r.error);
+                } else if (r.userid) {
                     localStorage.setItem('nombre', r.nombre);
                     localStorage.setItem('vista', 'index');
                     window.location.replace("/");
                 } else {
                     var data = JSON.parse(r);
-                    if(!data.error){
+                    if (!data.error) {
                         window.localStorage.setItem('vista', 'index');
                         window.location.replace("/");
-                    } else if(data.error) {
+                    } else if (data.error) {
                         _Globals.alertProcess('error', '!Error', data.error);
                     }
                 }
@@ -36,7 +38,7 @@ var _Login = (function () {
 })(jQuery);
 
 $(document).ready(function () {
-    $('#loginForm').on('submit', (e)=>{
+    $('#loginForm').on('submit', (e) => {
         e.preventDefault();
         _Login.loginUser();
     });

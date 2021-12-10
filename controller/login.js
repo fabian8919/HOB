@@ -21,6 +21,10 @@ router.post('/login', (req, res) => {
             req.session.cedula = resp.cedula;
             req.session.nombre = resp.nombre;
             req.session.correo = resp.correo;
+            let respUser = await fns.dataUserLogin(req.session.userid);
+            req.session.modulos = respUser.modulos;
+            req.session.padres = respUser.padres;
+            req.session.error = (!req.error) ? "" : req.error;
             res.send(req.session);
         } else {
             res.send(JSON.stringify(resp));

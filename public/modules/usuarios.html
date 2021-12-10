@@ -16,11 +16,10 @@
                                 <button type="button" class="btn btn-danger btn-rounded" id="modalUserClieButton"><i
                                         class="fas fa-address-book"></i> Asociar
                                     Usuario a Cliente</button>
-                                <button type="button" class="btn btn-warning btn-rounded" data-toggle="modal"
-                                    data-target="#modalUsuariosModulosRela"><i class="fas fa-book"></i>
+                                <button type="button" class="btn btn-warning btn-rounded" id="modalAsocialModulosButton"><i
+                                        class="fas fa-book"></i>
                                     Asociar Modulos</button>
-                                <button type="button" class="btn btn-info btn-rounded" data-toggle="modal"
-                                    data-target="#modalUsuariosPermisosRela"><i class="fas fa-registered"></i>
+                                <button type="button" class="btn btn-info btn-rounded" id="modalAsocialPermisosBtn"><i class="fas fa-registered"></i>
                                     Asociar Permisos</button>
                             </div>
                         </div>
@@ -193,13 +192,13 @@
 </div>
 <!-- Modal Asociar Cliente a Usuario END -->
 
-<!-- Modal Modulos a Usuario START -->
-<div id="modalUsuariosModulosRela" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+<!-- Modal Asociar Modulos START -->
+<div id="modalAsocialModulosRela" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
     aria-labelledby="mySmallModalLabel">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header modal-colored-header bg-primary">
-                <h4 class="modal-title" id="modalUsuariosModulosRelaLabel">Asociaci&oacute;n de Modulos</h4>
+                <h4 class="modal-title" id="modalAsocialModulosRelaLabel">Asociaci&oacute;n de Modulos</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body">
@@ -238,11 +237,12 @@
                     </div>
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            <table class="table" id="tableModulosUS" class="table table-striped table-bordered no-wrap">
+                            <table class="table" id="tableModulosUS"
+                                class="table table-striped table-bordered no-wrap">
                                 <thead class="bg-primary text-white">
                                     <tr>
                                         <th>Opciones</th>
-                                        <th>Modulo</th>
+                                        <th>Permiso</th>
                                     </tr>
                                 </thead>
                                 <tbody class="border border-primary">
@@ -257,7 +257,7 @@
         </div>
     </div>
 </div>
-<!-- Modal Modulos a Usuario END -->
+<!-- Modal Asociar Modulos END -->
 
 <!-- Modal Permisos a Usuario START -->
 <div id="modalUsuariosPermisosRela" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
