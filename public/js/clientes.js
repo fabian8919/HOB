@@ -39,7 +39,7 @@ var _Clientes = (function () {
                 var optHerramientas;
                 $.each(data,function(i,e){
                     optHerramientas = '<a href="#" onclick="_Clientes.editarCliente('+e.id+')" ><span class="btn btn-warning btn-sm"><i class="far fa-edit fa-lg"></i></span></a>  ';
-                    optHerramientas += '<a href="#" onclick="_Clientes.eliminarCliente(' + e.id + ')" data-toggle="tooltip" data-placement="right" data-original-title="Eliminar Registro"><span class="btn btn-danger btn-sm"><i class="far fa-times-circle fa-lg"></i></span></a>';
+                    // optHerramientas += '<a href="#" onclick="_Clientes.eliminarCliente(' + e.nit + ')" data-toggle="tooltip" data-placement="right" data-original-title="Eliminar Registro"><span class="btn btn-danger btn-sm"><i class="far fa-times-circle fa-lg"></i></span></a>';
                     TableClientes.row.add([
                         optHerramientas,
                         e.id,
@@ -110,11 +110,11 @@ var _Clientes = (function () {
                 $("#Clientes_telefono").val('');
                 $('#modalClientes').modal('hide');
                 if (r) {
+                    _Clientes.drawTable();
                     _Globals.alertProcess("success", "Bien!", "El proceso fue exitoso.");
                 } else {
                     _Globals.alertProcess("error", "Error!", "El proceso ha fallado.");
                 }
-                _Clientes.drawTable();
             }  
         });
     }
@@ -152,11 +152,20 @@ var _Clientes = (function () {
         });
     }
 
+    var limpiar = () =>{
+        $("#Clientes_nit").val('');
+        $("#Clientes_razon_social").val('');
+        $("#Clientes_correo").val('');
+        $("#Clientes_direccion").val('');
+        $("#Clientes_telefono").val('');
+    }
+
     return {
         clientes:clientes,
         editarCliente:editarCliente,
         eliminarCliente:eliminarCliente,
-        drawTable:drawTable
+        drawTable:drawTable,
+        limpiar:limpiar
     }
     
 })(jQuery);

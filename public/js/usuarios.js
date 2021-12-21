@@ -148,7 +148,7 @@ var _Usuarios = (function () {
                 var optHerramientas;
                 $.each(data, function (i, e) {
                     optHerramientas = '<a href="#" onclick="_Usuarios.editarUsuario(' + e.id + ')" id="editarUsuario' + e.id + '" data-toggle="tooltip" data-placement="left" data-original-title="Editar Registro"><span class="btn btn-warning btn-sm"><i class="far fa-edit fa-lg"></i></span></a>  ';
-                    optHerramientas += '<a href="#" onclick="_Usuarios.eliminarUsuario(' + e.id + ')" id="deleteUusario' + e.id + '" data-toggle="tooltip" data-placement="right" data-original-title="Eliminar Registro"><span class="btn btn-danger btn-sm"><i class="fas fa-user-times"></i></span></a>';
+                    optHerramientas += '<a href="#" onclick="_Usuarios.eliminarUsuario(' + e.id + ')" data-cedula'+e.id+'='+e.cedula+' id="deleteUusario' + e.id + '" data-toggle="tooltip" data-placement="right" data-original-title="Eliminar Registro"><span class="btn btn-danger btn-sm"><i class="fas fa-user-times"></i></span></a>';
                     TableUsuarios.row.add([
                         optHerramientas,
                         e.id,
@@ -225,6 +225,8 @@ var _Usuarios = (function () {
     }
 
     var eliminarUsuario = (id) => {
+        var elemento = document.getElementById('deleteUusario'+id);
+        var cedula = elemento.getAttribute('data-cedula'+id);
         Swal.fire({
             icon: 'question',
             title: 'Para eliminar el usuario debe ingresar su contraseña',
@@ -249,7 +251,8 @@ var _Usuarios = (function () {
                         url: "/usuarios/ValidarContrasena/",
                         data: {
                             "contrasena": pass,
-                            "id": id
+                            "id": id,
+                            "cedulaTable": cedula
                         },
                         success: function (r) {
                             if (!r) {

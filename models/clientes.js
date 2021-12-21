@@ -87,14 +87,18 @@ var fns = module.exports = {
     clientesEliminarCliente: async function (data) {
         return new Promise(
             (resolve, reject) => {
-                chatbot.query(process.env.DATEBASE_ENCODING + "DELETE FROM clientes WHERE id = ?", {
+                chatbot.query(process.env.DATEBASE_ENCODING + "DELETE FROM clientes_usuarios WHERE cliente_nit = ?", {
                     replacements: [data.id]
-                }).then(([clientesData]) => {
-                    if(_.size(clientesData) > 0){
-                        resolve(true)
-                    } else {
-                        resolve(false)
-                    }
+                }).then(() => {      
+                    chatbot.query(process.env.DATEBASE_ENCODING + "DELETE FROM clientes WHERE nit = ?", {
+                        replacements: [data.id]
+                    }).then(([clientesData]) => {
+                        if(_.size(clientesData) > 0){
+                            resolve(true)
+                        } else {
+                            resolve(false)
+                        }
+                    });
                 });
             }
         );

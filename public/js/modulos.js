@@ -96,10 +96,10 @@ var _Modulos = (function () {
                 $('#modalModulos').modal('hide');
                 if (r) {
                     _Globals.alertProcess("success", "Bien!", "El proceso fue exitoso.");
+                    _Modulos.drawTable();
                 } else {
                     _Globals.alertProcess("error", "Error!", "El proceso ha fallado.");
                 }
-                _Modulos.drawTable();
             }  
         });
     }
@@ -172,12 +172,19 @@ var _Modulos = (function () {
         $('.icon-picker-list').append(itemtemp);
     });
 
+    var limpiar = () =>{
+        $("#Modulos_id").val('');
+        $("#Modulos_nombre").val('');
+        $("#Modulos_icono").val('');
+    }
+
     return{
         modulos:modulos,
         editarModulo:editarModulo,
         eliminarModulo:eliminarModulo,
         traerModulosPadre:traerModulosPadre,
-        drawTable:drawTable
+        drawTable:drawTable,
+        limpiar:limpiar
     }
     
 })(jQuery);

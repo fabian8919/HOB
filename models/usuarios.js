@@ -121,10 +121,22 @@ var fns = module.exports = {
                 }).then(([clienteData]) => {
                     if (_.size(clienteData) >= 1) {
                         if (clienteData[0].contrasena == md5(data.contrasena)) {
-                            chatbot.query(process.env.DATEBASE_ENCODING + "DELETE FROM usuarios WHERE id = ?", {
-                                replacements: [data.id]
-                            }).then(([DelClient]) => {
-                                resolve(true);
+                            chatbot.query(process.env.DATEBASE_ENCODING + "DELETE FROM usuarios_permisos_acciones WHERE cedula_usuario = ?", {
+                                replacements: [data.cedulaTable]
+                            }).then(() => {
+                                chatbot.query(process.env.DATEBASE_ENCODING + "DELETE FROM clientes_usuarios WHERE usuario_cedula = ?", {
+                                    replacements: [data.cedulaTable]
+                                }).then(() => {
+                                    chatbot.query(process.env.DATEBASE_ENCODING + "DELETE FROM usuarios_permisos_modulos WHERE cedula_usuario = ?", {
+                                        replacements: [data.cedulaTable]
+                                    }).then(() => {
+                                        chatbot.query(process.env.DATEBASE_ENCODING + "DELETE FROM usuarios WHERE cedula = ?", {
+                                            replacements: [data.cedulaTable]
+                                        }).then(([DelClient]) => {
+                                            resolve(true);
+                                        });
+                                    });
+                                });
                             });
                         } else {
                             resolve(false);

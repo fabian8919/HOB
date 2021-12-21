@@ -28,8 +28,9 @@ var _Admin = (function () {
     /* Controla las vistas */
     var traerVista = (vista) => {
         $('#contentPage').html('');
-        var ruta = '../../modules/' + vista + '.html';
-        window.localStorage.setItem('vista', vista);
+        var vista2 = vista.replace(/\s/g, '_');
+        var ruta = '../../modules/' + vista2 + '.html';
+        window.localStorage.setItem('vista', vista2);
         $.ajax({
             url: ruta,
             beforeSend: function () {
@@ -37,11 +38,11 @@ var _Admin = (function () {
             },
             success: function (data) {
                 $('#contentPage').html(data);
-                _Admin.sidebarControl(vista);
+                _Admin.sidebarControl(vista2);
                 Swal.close();
             },
             error: function (_error) {
-                console.log("Error!", "Modulo no encontrado "+ vista, _error);
+                console.log("Error!", "Modulo no encontrado "+ vista2, _error);
             }
         });
     }
