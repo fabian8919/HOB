@@ -43,7 +43,7 @@ var _Modulos = (function () {
                         optHerramientas,
                         e.id_modulo,
                         e.nombre_modulo,
-                        e.modulo_padre,
+                        e.nom_padre,
                         icono
                     ]);
                 });

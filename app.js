@@ -9,6 +9,7 @@ const express = require('express');
 const app = express();
 const session = require("express-session");
 const Sequelize = require('sequelize');
+const mailer = require('nodemailer');
 
 global.chatbot = new Sequelize(process.env.DATEBASE_NAME, process.env.DATEBASE_USER, process.env.DATEBASE_PASS, {
     host: process.env.DATEBASE_HOST,
@@ -52,6 +53,15 @@ app.use('/', require('./controller/permisos'));
 app.use('/', require('./controller/modulos'));
 app.use('/', require('./controller/modulosPadre'));
 app.use('/', require('./controller/login'));
+
+/* Correo */
+global.transpotmail = mailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'angelus1623@gmail.com',
+      pass: 'Gelux*45/20'
+    }
+  });
 
 /* Levantando el servidor */
 app.listen(process.env.PORT, () => {

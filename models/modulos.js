@@ -54,7 +54,7 @@ var fns = module.exports = {
     modulosExtraer: async function () {
         return new Promise(
             (resolve, reject) => {
-                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM permisos_modulos ORDER BY id", {
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT pm.id AS idreg, pm.id_modulo, pm.icono, pm.nombre_modulo, mp.nombre AS nom_padre  FROM permisos_modulos pm INNER JOIN modulos_padre mp ON mp.id_modulo_padre = pm.modulo_padre ORDER BY pm.id", {
                     replacements: []
                 }).then(([modulosData]) => {
                     if(_.size(modulosData) > 0){

@@ -13,8 +13,7 @@
                 <div class="lds-pos"></div>
             </div>
         </div>
-        <div class="auth-wrapper d-flex no-block justify-content-center align-items-center position-relative"
-            style="background:url(assets/images/big/auth-bg.jpg) no-repeat center center;">
+        <div class="auth-wrapper d-flex no-block justify-content-center align-items-center position-relative">
             <div class="auth-box row">
                 <div class="col-lg-7 col-md-5 modal-bg-img" style="background-image: url(assets/images/big/logo.png);">
                 </div>
@@ -23,37 +22,98 @@
                         <div class="text-center">
                             <span style="font-size: 60px;color: #101a26;"><i class="fas fa-users"></i></span>
                         </div>
-                        <h2 class="mt-3 text-center">Ingresar</h2>
-                        <p class="text-center">Ingrese su direcci&oacute;n de correo electr&oacute;nico y contrase&ntilde;a para acceder.</p>
-                        <form method="post" action="#" class="mt-4" id="loginForm">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label class="text-dark" for="username">Usuario</label>
-                                        <input class="form-control" id="username" name="username" type="text" required
-                                            placeholder="Ingrese su usuario">
+                        <%if (recovery) { %>
+                            <h2 class="mt-3 text-center">Recuperaci&oacute;n</h2>
+                            <form method="post" action="#" class="mt-4" id="loginRecoveryForm">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label class="text-dark" for="passnew">Nueva contraseña</label>
+                                            <input class="form-control" id="passnew" name="passnew" type="password" required
+                                                placeholder="Escribir aquí">
+                                            <small id="smallTextPassword"></small>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label class="text-dark" for="passnew2">Repetir contraseña</label>
+                                            <input class="form-control" id="passnew2" name="passnew2" type="password" required
+                                                placeholder="Escribir aquí">
+                                            <small id="smallTextPassword2"></small>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 text-center">
+                                        <button hidden id="changePass" type="submit" class="btn btn-block btn-dark">Cambiar</button>
+                                    </div>
+                                    <div class="col-lg-12 text-center mt-5">
+                                        
                                     </div>
                                 </div>
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label class="text-dark" for="password">Contrase&ntilde;a</label>
-                                        <input class="form-control" id="password" name="password" type="password" required
-                                            placeholder="Ingrese su contrase&ntilde;a">
+                            </form>
+                        <% }  else { %>
+                            <h2 class="mt-3 text-center">Ingresar</h2>
+                            <p class="text-center">Ingrese su direcci&oacute;n de correo electr&oacute;nico y contrase&ntilde;a para acceder.</p>
+                            <form method="post" action="#" class="mt-4" id="loginForm">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label class="text-dark" for="username">Usuario</label>
+                                            <input class="form-control" id="username" name="username" type="text" required
+                                                placeholder="Ingrese su usuario">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label class="text-dark" for="password">Contrase&ntilde;a</label>
+                                            <input class="form-control" id="password" name="password" type="password" required
+                                                placeholder="Ingrese su contrase&ntilde;a">
+                                                <small style="cursor:pointer;" id="recovery"><b>¿Olvid&oacute; su contraseña?</b></small>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 text-center">
+                                        <button type="submit" class="btn btn-block btn-dark">INGRESAR</button>
+                                    </div>
+                                    <div class="col-lg-12 text-center mt-5">
+                                        
                                     </div>
                                 </div>
-                                <div class="col-lg-12 text-center">
-                                    <button type="submit" class="btn btn-block btn-dark">INGRESAR</button>
-                                </div>
-                                <div class="col-lg-12 text-center mt-5">
-                                    
-                                </div>
-                            </div>
-                        </form>
+                            </form>
+                        <% } %>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <form id="form-recovery" method="post">
+        <div id="recoveryPass" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="recoveryPassLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header modal-colored-header bg-primary">
+                        <h4 class="modal-title" id="recoveryPassLabel">Recuperaci&oacute;n de contrase&ntilde;a</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="modal-body-sm" class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input class="form-control" type="email" id="email" name="email"
+                                            placeholder="Ingrese el correo electronico registrado" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button>
+                        <input type="submit" value="Recuperar" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    
 
     <script src="assets/libs/jquery/dist/jquery.min.js "></script>
     <!-- Bootstrap tether Core JavaScript -->

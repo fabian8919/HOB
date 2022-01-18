@@ -11,6 +11,7 @@ const Sequelize = require('sequelize');
 const session = require("express-session");
 const md5 = require('md5');
 const in_array = require('in_array');
+const mailer = require('nodemailer');
 
 /* Conectando el servidor a las sesiones */
 app.use(session({
@@ -126,5 +127,5 @@ var fns = module.exports = {
                 });
             }
         );
-    },
+    }
 }

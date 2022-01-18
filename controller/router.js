@@ -3,6 +3,9 @@ const express = require('express');
 const log = console.log
 const router = express.Router();
 const app = express();
+const jwt = require("jwt-simple");
+const config = require("../configs/config");
+const moment = require("moment");
 const session = require("express-session");
 
 /* Conectando el servidor a las sesiones */
@@ -13,6 +16,27 @@ app.use(session({
 }));
 
 /* inicio */
+router.get('/:tk', (req, res) => {
+    if(req.params.tk){
+        var payload = jwt.decode(req.params.tk, config.key);
+        if (payload.exp <= moment().unix()) {
+            res.redirect('/');
+        } else {
+            req.session.userid = payload.sub;
+            res.render('login', {recovery : true});
+        }
+    } else {
+        if (req.session.userid != null) {
+            res.render('index', {
+                modulos: req.session.modulos,
+                padres: req.session.padres
+            });
+        } else {
+            res.render('login', {recovery: false});
+        }
+    }
+});
+
 router.get('/', (req, res) => {
     if (req.session.userid != null) {
         res.render('index', {
@@ -20,7 +44,7 @@ router.get('/', (req, res) => {
             padres: req.session.padres
         });
     } else {
-        res.render('login');
+        res.render('login', {recovery: false});
     }
 });
 
