@@ -8,6 +8,7 @@ const _ = require('lodash');
 const session = require("express-session");
 const fns = require("../models/login");
 const mailer = require("../models/mailer");
+const { cyan } = require('colors');
 
 /* Conectando el servidor a las sesiones */
 app.use(session({
@@ -30,7 +31,7 @@ router.post('/login', (req, res) => {
             req.session.error = (!req.error) ? "" : req.error;
             res.send(req.session);
         } else {
-            res.send(JSON.stringify(resp));
+            res.send(resp);
         }
     })();
 });
@@ -82,4 +83,12 @@ router.post('/password', (req, res) => {
     });
 });
 
+/* salir */
+router.get('/salir', (req, res) => {
+    console.log(cyan(req.session))
+    req.session.destroy();
+    console.log(cyan(req.session))
+    return false
+    res.redirect('/');
+});
 module.exports = router;

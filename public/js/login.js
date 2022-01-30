@@ -19,12 +19,11 @@ var _Login = (function () {
                     localStorage.setItem('vista', 'index');
                     window.location.replace("/");
                 } else {
-                    var data = JSON.parse(r);
-                    if (!data.error) {
+                    if (!r.error) {
                         window.localStorage.setItem('vista', 'index');
                         window.location.replace("/");
-                    } else if (data.error) {
-                        _Globals.alertProcess('error', '!Error', data.error);
+                    } else if (r.error) {
+                        _Globals.alertProcess('error', '!Error', r.error);
                     }
                 }
             }

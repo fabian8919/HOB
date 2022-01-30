@@ -7,6 +7,7 @@ const jwt = require("jwt-simple");
 const config = require("../configs/config");
 const moment = require("moment");
 const session = require("express-session");
+const { cyan } = require('colors');
 
 /* Conectando el servidor a las sesiones */
 app.use(session({
@@ -17,7 +18,8 @@ app.use(session({
 
 /* inicio */
 router.get('/:tk', (req, res) => {
-    if(req.params.tk){
+
+    if(req.params.tk != 'salir'){
         var payload = jwt.decode(req.params.tk, config.key);
         if (payload.exp <= moment().unix()) {
             res.redirect('/');
@@ -25,7 +27,11 @@ router.get('/:tk', (req, res) => {
             req.session.userid = payload.sub;
             res.render('login', {recovery : true});
         }
-    } else {
+    }else if(req.params.tk == 'salir'){
+        req.session.destroy();
+        res.redirect('/');
+    }else {
+       
         if (req.session.userid != null) {
             res.render('index', {
                 modulos: req.session.modulos,
@@ -49,9 +55,9 @@ router.get('/', (req, res) => {
 });
 
 /* salir */
-router.get('/salir', (req, res) => {
-    req.session.destroy();
-    res.redirect('/');
-});
+// router.get('/salir', (req, res) => {
+//     req.session.destroy();
+//     res.redirect('/');
+// });
 
 module.exports = router;
