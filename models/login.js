@@ -21,6 +21,25 @@ app.use(session({
 }));
 
 var fns = module.exports = {
+    clientesUsuarios: async function (cedula) {
+        return new Promise(
+            (resolve, reject) => {
+                resp = {}
+                chatbot.query(process.env.DATEBASE_ENCODING + "select clius.cliente_nit, cli.razon_social FROM clientes_usuarios AS clius INNER JOIN clientes AS cli ON cli.nit = clius.cliente_nit WHERE clius.usuario_cedula = ?", {
+                    replacements: [cedula]
+                }).then(([clienteData]) => {
+                    var ClientesUsu = [];
+                    for (let i = 0; i < clienteData.length; i++) {
+                        ClientesUsu.push({
+                            nit: clienteData[i].cliente_nit,
+                            razonsocial: clienteData[i].razon_social,
+                        });
+                    }
+                    resolve(ClientesUsu);
+                });
+            }
+        );
+    },
     login: async function (data) {
         return new Promise(
             (resolve, reject) => {

@@ -14,7 +14,7 @@ app.use(session({
 
 router.post('/usuarios/', (req, res) => {
     (async () => {
-        let resp = await fns.usuarios(req.body);
+        let resp = await fns.usuarios(req.body, req.session.clienteSelec);
         res.send(resp);
     })();
 });

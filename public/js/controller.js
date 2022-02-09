@@ -53,9 +53,21 @@ var _Admin = (function () {
         $('#'+vista).addClass("selected");
     }
 
+    var changeCliente = () =>{
+        var nitClienteSelect = $("#selectClientsUser :selected").val();
+        $.ajax({
+            type:"POST",
+            url: "/router/changeCliente/",
+            data:{
+                "nit":nitClienteSelect
+            }
+        });
+    }
+
     return {
         traerVista: traerVista,
-        sidebarControl:sidebarControl
+        sidebarControl:sidebarControl,
+        changeCliente:changeCliente
     }
 
 })(jQuery);

@@ -68,6 +68,7 @@ var fns = module.exports = {
     },
 
     modulosExtraerId: async function (data) {
+        console.log(data.id)
         return new Promise(
             (resolve, reject) => {
                 chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM permisos_modulos WHERE id = ?", {

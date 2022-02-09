@@ -35,7 +35,8 @@ router.get('/:tk', (req, res) => {
         if (req.session.userid != null) {
             res.render('index', {
                 modulos: req.session.modulos,
-                padres: req.session.padres
+                padres: req.session.padres,
+                clientes: req.session.clientes
             });
         } else {
             res.render('login', {recovery: false});
@@ -47,17 +48,15 @@ router.get('/', (req, res) => {
     if (req.session.userid != null) {
         res.render('index', {
             modulos: req.session.modulos,
-            padres: req.session.padres
+            padres: req.session.padres,
+            clientes: req.session.clientes
         });
     } else {
         res.render('login', {recovery: false});
     }
 });
 
-/* salir */
-// router.get('/salir', (req, res) => {
-//     req.session.destroy();
-//     res.redirect('/');
-// });
-
+router.post('/router/changeCliente/', (req, res) => {
+    req.session.clienteSelec = req.body.nit;
+});
 module.exports = router;

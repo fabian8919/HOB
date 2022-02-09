@@ -99,8 +99,10 @@
                 <li class="nav-item d-none d-md-block">
                     <a class="nav-link" href="javascript:void(0)">
                         <div class="customize-input">
-                            <select id="selectClientsUser" class="custom-select form-control bg-white custom-radius custom-shadow border-0">
-                                <option value="">SELECCIONE</option>
+                            <select onchange="_Admin.changeCliente()" id="selectClientsUser" class="custom-select form-control bg-white custom-radius custom-shadow border-0">
+                                <% clientes.forEach(function(cli) { %>
+                                    <option value="<%= cli.nit %>"><%= cli.razonsocial %></option>
+                                <% }); %>
                             </select>
                         </div>
                     </a>

@@ -21,7 +21,8 @@ app.use(session({
 }));
 
 var fns = module.exports = {
-    usuarios: async function (data) {
+    usuarios: async function (data, cliente) {
+
         return new Promise(
             (resolve, reject) => {
 
@@ -36,6 +37,9 @@ var fns = module.exports = {
                             replacements: [data.cedula, data.nombre, data.correo, md5(data.contrasena), 'now()', activo, bloqueado]
                         }).then(([insertUser]) => {
                             if (_.size(insertUser) == 1) {
+                                chatbot.query(process.env.DATEBASE_ENCODING + "INSERT INTO clientes_usuarios(cliente_nit, usuario_cedula) VALUES (?, ?)", {
+                                    replacements: [cliente,data.cedula]
+                                })
                                 resolve(true);
                             } else {
                                 resolve(false);

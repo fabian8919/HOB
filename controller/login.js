@@ -26,9 +26,12 @@ router.post('/login', (req, res) => {
             req.session.nombre = resp.nombre;
             req.session.correo = resp.correo;
             let respUser = await fns.dataUserLogin(req.session.userid);
+            let ClientesUsu = await fns.clientesUsuarios(resp.cedula);
             req.session.modulos = respUser.modulos;
             req.session.padres = respUser.padres;
             req.session.error = (!req.error) ? "" : req.error;
+            req.session.clientes = ClientesUsu;
+            req.session.clienteSelec = ClientesUsu[0]['nit'];
             res.send(req.session);
         } else {
             res.send(resp);
@@ -83,12 +86,4 @@ router.post('/password', (req, res) => {
     });
 });
 
-/* salir */
-router.get('/salir', (req, res) => {
-    console.log(cyan(req.session))
-    req.session.destroy();
-    console.log(cyan(req.session))
-    return false
-    res.redirect('/');
-});
 module.exports = router;

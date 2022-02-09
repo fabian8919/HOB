@@ -36,8 +36,8 @@ var _Modulos = (function () {
                 var optHerramientas;
                 var icono;
                 $.each(data,function(i,e){
-                    optHerramientas = '<a href="#" onclick="_Modulos.editarModulo('+e.id+')" ><span class="btn btn-warning btn-sm"><i class="far fa-edit fa-lg"></i></span></a>  ';
-                    optHerramientas += '<a href="#" onclick="_Modulos.eliminarModulo('+e.id+')" data-toggle="tooltip" data-placement="right" data-original-title="Eliminar Registro"><span class="btn btn-danger btn-sm"><i class="far fa-times-circle fa-lg"></i></span></a>';
+                    optHerramientas = '<a href="#" onclick="_Modulos.editarModulo('+e.idreg+')" ><span class="btn btn-warning btn-sm"><i class="far fa-edit fa-lg"></i></span></a>  ';
+                    optHerramientas += '<a href="#" onclick="_Modulos.eliminarModulo('+e.idreg+')" data-toggle="tooltip" data-placement="right" data-original-title="Eliminar Registro"><span class="btn btn-danger btn-sm"><i class="far fa-times-circle fa-lg"></i></span></a>';
                     icono = '<i class="'+e.icono+'" style="font-size: xx-large"></i>'
                     TableModulos.row.add([
                         optHerramientas,
