@@ -46,61 +46,61 @@
 </div>
 
 <form id="form-clientes" method="post" action="/clientes/">
-<div id="modalClientes" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalClientesLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header modal-colored-header bg-primary">
-                <h4 class="modal-title" id="modalClientesLabel">Clientes</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            </div>
-            <div class="modal-body">
-                    <div id="modal-body-sm" class="modal-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <input class="form-control" type="number" id="Clientes_nit" name="Clientes_nit" placeholder="NIT" required>
+    <div id="modalClientes" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalClientesLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header modal-colored-header bg-primary">
+                    <h4 class="modal-title" id="modalClientesLabel">Clientes</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                        <div id="modal-body-sm" class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input class="form-control" type="number" id="Clientes_nit" name="Clientes_nit" placeholder="NIT" required>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <input class="form-control" type="text" id="Clientes_razon_social" name="Clientes_razon_social" placeholder="Razón Social" required>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" id="Clientes_razon_social" name="Clientes_razon_social" placeholder="Razón Social" required>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <input class="form-control" type="email" id="Clientes_correo" name="Clientes_correo" placeholder="Correo Electrónico" required>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input class="form-control" type="email" id="Clientes_correo" name="Clientes_correo" placeholder="Correo Electrónico" required>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <input class="form-control" type="text" id="Clientes_direccion" name="Clientes_direccion" placeholder="Dirección" >
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" id="Clientes_direccion" name="Clientes_direccion" placeholder="Dirección" >
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <input class="form-control" type="text" id="Clientes_telefono" name="Clientes_telefono" placeholder="Teléfono" >
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" id="Clientes_telefono" name="Clientes_telefono" placeholder="Teléfono" >
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-12 text-right">
-                                <div class="form-group">
-                                    <div class="form-check form-check-inline">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="Clientes_activo" name="Clientes_activo" checked>
-                                            <label class="custom-control-label" for="Clientes_activo">Activo</label>
-                                        </div>
-                                    </div> 
+                                <div class="col-md-12 text-right">
+                                    <div class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="Clientes_activo" name="Clientes_activo" checked>
+                                                <label class="custom-control-label" for="Clientes_activo">Activo</label>
+                                            </div>
+                                        </div> 
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button onclick="_Clientes.limpiar()" type="button" class="btn btn-warning btn-circle mr-auto"><i class="fa fa-paint-brush"></i></button>
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button>
-                    <input type="submit" value="Guardar Cambios" class="btn btn-primary"/>
+                    <div class="modal-footer">
+                        <button onclick="_Clientes.limpiar()" type="button" class="btn btn-warning btn-circle mr-auto"><i class="fa fa-paint-brush"></i></button>
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button>
+                        <input type="submit" value="Guardar Cambios" class="btn btn-primary"/>
+                    </div>
                 </div>
             </div>
-        </div>
     </div>
 </form>
 <script src="js/clientes.js"></script>

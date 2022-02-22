@@ -64,10 +64,15 @@ var _Admin = (function () {
         });
     }
 
+    var sleepProcess = async (ms)=>{
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     return {
         traerVista: traerVista,
-        sidebarControl:sidebarControl,
-        changeCliente:changeCliente
+        sidebarControl: sidebarControl,
+        changeCliente: changeCliente,
+        sleepProcess: sleepProcess
     }
 
 })(jQuery);
