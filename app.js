@@ -53,6 +53,7 @@ app.use('/', require('./controller/permisos'));
 app.use('/', require('./controller/modulos'));
 app.use('/', require('./controller/modulosPadre'));
 app.use('/', require('./controller/login'));
+app.use('/', require('./controller/sms'));
 
 /* Correo */
 global.transpotmail = mailer.createTransport({

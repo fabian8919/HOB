@@ -40,6 +40,13 @@ var _Clientes = (function () {
                 $.each(data,function(i,e){
                     optHerramientas = '<a href="#" onclick="_Clientes.editarCliente('+e.id+')" ><span class="btn btn-warning btn-sm"><i class="far fa-edit fa-lg"></i></span></a>  ';
                     // optHerramientas += '<a href="#" onclick="_Clientes.eliminarCliente(' + e.nit + ')" data-toggle="tooltip" data-placement="right" data-original-title="Eliminar Registro"><span class="btn btn-danger btn-sm"><i class="far fa-times-circle fa-lg"></i></span></a>';
+                    let iconActivo = '';
+
+                    if(e.activo == true){
+                        iconActivo = '<i class="fas fa-toggle-on fa-lg"></i>';
+                    }else{
+                        iconActivo = '<i class="fas fa-toggle-off fa-lg"></i>';
+                    }
                     TableClientes.row.add([
                         optHerramientas,
                         e.id,
@@ -49,7 +56,7 @@ var _Clientes = (function () {
                         e.direccion,
                         e.correo,
                         e.fecha,
-                        e.activo
+                        iconActivo
                     ]);
                 });
                 TableClientes.draw();

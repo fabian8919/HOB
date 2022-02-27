@@ -147,6 +147,12 @@ var _Usuarios = (function () {
                 var data = JSON.parse(r);
                 var optHerramientas;
                 $.each(data, function (i, e) {
+                    let iconActivo = '';
+                    if(e.activo == true){
+                        iconActivo = '<i class="fas fa-toggle-on fa-lg"></i>';
+                    }else{
+                        iconActivo = '<i class="fas fa-toggle-off fa-lg"></i>';
+                    }
                     optHerramientas = '<a href="#" onclick="_Usuarios.editarUsuario(' + e.id + ')" id="editarUsuario' + e.id + '" data-toggle="tooltip" data-placement="left" data-original-title="Editar Registro"><span class="btn btn-warning btn-sm"><i class="far fa-edit fa-lg"></i></span></a>  ';
                     optHerramientas += '<a href="#" onclick="_Usuarios.eliminarUsuario(' + e.id + ')" data-cedula'+e.id+'='+e.cedula+' id="deleteUusario' + e.id + '" data-toggle="tooltip" data-placement="right" data-original-title="Eliminar Registro"><span class="btn btn-danger btn-sm"><i class="fas fa-user-times"></i></span></a>';
                     TableUsuarios.row.add([
@@ -156,7 +162,7 @@ var _Usuarios = (function () {
                         e.nombre,
                         e.correo,
                         moment(e.fecha).format("YYYY-MM-DD"),
-                        (e.activo) ? "Activo" : "Inactivo",
+                        iconActivo,
                         (e.bloqueado) ? "Bloqueado" : "Desbloqueado"
                     ]);
                 });
