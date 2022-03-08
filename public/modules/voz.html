@@ -75,7 +75,28 @@
                     <div id="crearproceso" class="tabcontent">
                         <div class="row">
                             <div id="divProces" class="mx-auto">
-                                
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <form action="/sms/masivo/" method="post" id="formSmsMasivo">
+                                            <div>
+                                                <label for="nombreProceso">Procesamiento de mensajes de voz - Voz</label>
+                                                <input type="text" class="form-control" id="nombreProceso" name="nombreProceso" placeholder="Ingrese el nombre del proceso" />
+                                            </div>
+                                            <div>
+                                                <label for="baseDeDatos">Cargar base de datos</label>
+                                                <br>
+                                                <small>* Recuerde que la base de datos debe estar en formato .CSV. Es obligatorio que la base de datos tenga la columna celular.</small>
+                                                <input type="file" class="form-control" id="baseDeDatos" name="baseDeDatos" placeholder="Ingrese el nombre del proceso" />
+                                            </div>
+                                        </form>
+                                        <div class="py-2">
+                                            <i style="color:blueviolet;font-size: 30px;" class="fas fa-arrow-alt-circle-left"></i>
+                                        </div>
+                                        <div class="py-2">
+                                            <i style="color:blueviolet;font-size: 30px;" class="fas fa-arrow-alt-circle-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

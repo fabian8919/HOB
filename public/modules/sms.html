@@ -75,7 +75,41 @@
                     <div id="crearproceso" class="tabcontent">
                         <div class="row">
                             <div id="divProces" class="mx-auto">
-                                
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <form action="/sms/masivo/" method="post" id="formSmsMasivo">
+                                            <div>
+                                                <label for="nombreProceso">Procesamiento de mensajes de voz - Masivo</label>
+                                                <input type="text" class="form-control" id="nombreProceso" name="nombreProceso" placeholder="Ingrese el nombre del proceso" />
+                                            </div>
+                                            <div>
+                                                <label for="baseDeDatos">Cargar base de datos</label>
+                                                <br>
+                                                <small>* Recuerde que la base de datos debe estar en formato .CSV. Es obligatorio que la base de datos tenga la columna celular.</small>
+                                                <input type="file" class="form-control" id="baseDeDatos" name="baseDeDatos" placeholder="Ingrese el nombre del proceso" />
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="mensajeProceso">Mensaje</label>
+                                                    <br>
+                                                    <small>* El mensaje que ingrese se enviará a toda la base de datos, recuerde personalizarlo o seleccionar un mensaje predeterminado de una plantilla.</small>
+                                                    <textarea class="form-control" id="mensajeProceso" name="mensajeProceso" placeholder="Ingrese el nombre del proceso" rows="5" columns="21"></textarea>
+                                                </div>
+                                                <div class="col-md-6">                                                
+                                                    <div style="width: 220px;height: 220px;background-color: aqua;">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <div class="py-2">
+                                            <i style="color:blueviolet;font-size: 30px;" class="fas fa-arrow-alt-circle-left"></i>
+                                        </div>
+                                        <div class="py-2">
+                                            <i style="color:blueviolet;font-size: 30px;" class="fas fa-arrow-alt-circle-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
