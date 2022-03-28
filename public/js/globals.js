@@ -13,7 +13,8 @@ var _Globals = (function () {
             icon: "info",
             title: "Espere",
             text: "Procesando...",
-            showConfirmButton: false
+            showConfirmButton: false,
+            allowOutsideClick: false
         });
     }
 

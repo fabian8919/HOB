@@ -4,14 +4,21 @@ const dotenv = require('dotenv').config();
 const colors = require('colors');
 const green = colors.green;
 const red = colors.red;
+const cyan = colors.cyan;
 const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
+const router = express.Router();
 const session = require("express-session");
 const Sequelize = require('sequelize');
 const mailer = require('nodemailer');
 const fileupload = require("express-fileupload");
 
+global.log = console.log;
+global.cyan = cyan;
+global.red = red;
+global.green = green;
+global.r = router;
 global.chatbot = new Sequelize(process.env.DATEBASE_NAME, process.env.DATEBASE_USER, process.env.DATEBASE_PASS, {
     host: process.env.DATEBASE_HOST,
     dialect: 'postgres',

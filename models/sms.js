@@ -1,21 +1,6 @@
-const log = console.log;
-const express = require('express');
-const app = express();
 const _ = require('lodash');
-const colors = require('colors');
-const red = colors.red;
-const yellow = colors.yellow;
-const cyan = colors.cyan;
-const green = colors.green;
-const Sequelize = require('sequelize');
-const session = require("express-session");
-
-/* Conectando el servidor a las sesiones */
-app.use(session({
-    secret: process.env.SESSION_KEY,
-    saveUninitialized: true,
-    resave: false,
-}));
+const fs = require('fs');
+const papper = require('papaparse');
 
 var fns = module.exports = {
     listarPlantillas: async function (clienteSelec) {
@@ -33,7 +18,6 @@ var fns = module.exports = {
             }
         );
     },
-
     existePlantilla: async function (data, clienteSelec) {
         return new Promise(
             (resolve, reject) => {
@@ -49,7 +33,6 @@ var fns = module.exports = {
             }
         );
     },
-
     CreatePlantilla: async function (data, clienteSelec) {
         return new Promise(
             (resolve, reject) => {
@@ -66,7 +49,6 @@ var fns = module.exports = {
             }
         );
     },
-
     UpdatePlantilla: async function (data, clienteSelec) {
         return new Promise(
             (resolve, reject) => {
@@ -83,5 +65,43 @@ var fns = module.exports = {
             }
         );
     },
-
+    procesarMasivo: async function (data, file) {
+        return new Promise(
+            (resolve, reject) => {
+                console.log(data)
+                console.log(file)
+                file.mv(`tmp/${file.name}`,err => {
+                    if(err){
+                        console.log(err);
+                        resolve(false);
+                    } else {
+                        let stream = fs.createReadStream(`tmp/${file.name}`)
+                        .once('open', function () {
+                        papper.parse(stream, {
+                            delimiter: ';',
+                            header: true,
+                            worker: true,
+                            complete: fns.procesarMasivoDataBase,
+                            error: function (error) {
+                                console.log(error);
+                                resolve(false);
+                            }
+                        });
+                        })
+                        .on('error', function (err) {
+                            console.log(err);
+                            resolve(false);
+                        });
+                    }
+                })
+            }
+        );
+    },
+    procesarMasivoDataBase: async function (data) {
+        return new Promise(
+            (resolve, reject) => {
+               log(data)
+            }
+        );
+    },
 }

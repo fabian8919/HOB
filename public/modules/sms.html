@@ -1,8 +1,7 @@
 <style>
-
-* {
-  box-sizing: border-box;
-}
+    * {
+        box-sizing: border-box;
+    }
 
     body {
         background-color: #f1f1f1;
@@ -17,7 +16,7 @@
     }
 
     h1 {
-        text-align: center;  
+        text-align: center;
     }
 
     input {
@@ -26,9 +25,11 @@
         font-size: 17px;
         border: 1px solid #aaaaaa;
     }
+
     input.invalid {
         background-color: #f5cece;
     }
+
     .tabSteps {
         display: none;
     }
@@ -55,7 +56,7 @@
         width: 15px;
         margin: 0 2px;
         background-color: #bbbbbb;
-        border: none;  
+        border: none;
         border-radius: 50%;
         display: inline-block;
         opacity: 0.5;
@@ -66,7 +67,7 @@
     }
 
     .step.finish {
-    background-color: #04AA6D;
+        background-color: #04AA6D;
     }
 
     .tabcontent {
@@ -83,11 +84,15 @@
         from {
             opacity: 0;
         }
+
         to {
             opacity: 1;
         }
     }
 </style>
+
+<script src="assets/libs/papaparse/papaparse.js"></script>
+
 <div class="page-breadcrumb">
     <h1>Mensajes de Texto</h1>
 </div>
@@ -143,69 +148,111 @@
                         </div>
                     </div>
                     <div id="crearproceso" class="tabcontent">
-                        <form id="formSmsMasivo" action="/sms/masivo/">
+                        <form id="formSmsMasivo" method="post">
                             <div class="tabSteps">
-                                <h1>Información del proceso:</h1>
+                                <h1>Información del proceso</h1>
                                 <br>
-                                <p><input placeholder="Ingrese el nombre del proceso" oninput="this.className = ''" id="nombreProceso" name="nombreProceso"></p>
+                                <p><input placeholder="Ingrese el nombre del proceso" oninput="this.className = ''"
+                                        id="nombreProceso" name="nombreProceso"></p>
                             </div>
                             <div class="tabSteps">
-                                <h1>Base de Datos:</h1>
+                                <h1>Base de datos:</h1>
                                 <br>
-                                <small>* Recuerde que la base de datos debe estar en formato .CSV. Es obligatorio que la base de datos tenga la columna celular.</small>
-                                <p><input type="file" class="form-control" id="baseDeDatos" name="baseDeDatos" placeholder="Ingrese el nombre del proceso" /></p>
-                                </div>
+                                <small>* Recuerde que la base de datos debe estar en formato .CSV. Es obligatorio que la
+                                    base de datos tenga la columna celular.</small>
+                                <p><input type="file" class="form-control" id="baseDeDatos" name="baseDeDatos"
+                                        accept=".csv" /></p>
+                            </div>
                             <div class="tabSteps">
-                                <h1>Mensaje:</h1>
+                                <h1>Mensaje</h1>
                                 <br>
-                                <small>* El mensaje que ingrese se enviará a toda la base de datos, recuerde personalizarlo o seleccionar un mensaje predeterminado de una plantilla.</small>
-                                <p><textarea class="form-control" id="mensajeProceso" name="mensajeProceso" placeholder="Ingrese el nombre del proceso" rows="5" columns="21"></textarea></p>
+                                <p>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="selectPlantilla">Plantilla:</label>
+                                            <select id="selectPlantilla" class="form-control">
+                                                <option value="">Seleccione</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="selectCampana">Campaña:</label>
+                                            <select id="selectCampana" class="form-control">
+                                                <option value="">Seleccione</option>
+                                            </select>  
+                                        </div>
+                                    </div>
+                                </p>
+                                <p>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="headersDIV">Encabezados disponibles en la base de datos:</label>
+                                            <div id="headersDIV">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            
+                                        </div>
+                                    </div>
+                                </p>
+                                <small>* El mensaje que ingrese se enviará a toda la base de datos, recuerde
+                                    personalizarlo o seleccionar un mensaje predeterminado de una plantilla.</small>
+                                <p><textarea class="form-control" id="mensajeProceso" name="mensajeProceso"
+                                        placeholder="Ingrese el nombre del proceso" rows="5" columns="21"
+                                        onkeyup="_Sms.countCharacter(this);" onchange="_Sms.countCharacter(this);"
+                                        required></textarea></p>
+                                <small>Cantidad de caracteres: <span id="cantCharacter">0</span></small>
                             </div>
                             <div class="tabSteps">
                                 <h1>Previsualizar Mensaje:</h1>
-                                <ul class="chat-list list-style-none px-3 pt-3" style="background-color: gainsboro;">
-                                        <li class="chat-item list-style-none mt-3">
-                                            <div class="chat-img d-inline-block"><img
-                                                    src="assets/images/users/2.jpg" alt="user"
-                                                    class="rounded-circle" width="45">
-                                            </div>
-                                            <div class="chat-content d-inline-block pl-3">
-                                                <h6 class="font-weight-medium">Bianca Doe</h6>
-                                                <div class="msg p-2 d-inline-block mb-1">It’s
-                                                    Great opportunity to
-                                                    work.</div>
-                                            </div>
-                                            <div class="chat-time d-block font-10 mt-1 mr-0 mb-3">10:57 am
-                                            </div>
-                                        </li>
-                                    </ul>
+                                <ul class="chat-list list-style-none p-3" style="background-color: gainsboro;">
+                                    <li class="chat-item list-style-none mt-3">
+                                        <div class="chat-content d-inline-block pl-3">
+                                            <h6 class="font-weight-medium">Tienes un nuevo mensaje:</h6>
+                                            <div id="msgPrev" class="msg p-2 d-inline-block mb-1"></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <small>Recuerde que la presencia de caracteres especiales como tildes podrian afectar la
+                                    recepcion del mensaje.</small>
                             </div>
-                            <div class="tabSteps">enviar
-                                
+                            <div class="tabSteps">
+                                <h1>Resumen</h1>
+                                <p>Nombre del cargue:
+                                    <input type="text" class="form-control" id="nombreProcesoP" disabled />
+                                </p>
+                                <p>Base de datos:
+                                    <input type="text" class="form-control" id="nombreDataBase" disabled />
+                                </p>
+                                <p>Cantidad: <b><span id="cantidadDataBase"></span></b></p>
+                                <p>Mensaje:
+                                    <textarea class="form-control" id="mensajeProcesoBef" name="mensajeProcesoBef"
+                                            rows="5" columns="21" disabled></textarea>
+                                </p>
+                                <small>Si da clic en siguiente iniciara el procesamiento de su base de datos.</small>
                             </div>
                             <div style="overflow:auto;">
-                              <div style="float:right;">
-                                <button type="button" id="prevBtn" onclick="_Sms.nextPrev(-1)">Previous</button>
-                                <button type="button" id="nextBtn" onclick="_Sms.nextPrev(1)">Next</button>
-                              </div>
+                                <div style="float:right;">
+                                    <button type="button" id="prevBtn" onclick="_Sms.nextPrev(-1)">Atr&aacute;s</button>
+                                    <button type="button" id="nextBtn" onclick="_Sms.nextPrev(1)">Siguiente</button>
+                                </div>
                             </div>
-                            <div style="text-align:center;margin-top:40px;">
-                              <span class="step"></span>
-                              <span class="step"></span>
-                              <span class="step"></span>
-                              <span class="step"></span>
-                              <span class="step"></span>
+                            <div style="text-align:center;margin-top:20px;">
+                                <span class="step"></span>
+                                <span class="step"></span>
+                                <span class="step"></span>
+                                <span class="step"></span>
                             </div>
-                          </form>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 <form id="form-plantillasSms" method="post">
-    <div id="modalPlantillasSms" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalPlantillasSmsLabel"
-        aria-hidden="true">
+    <div id="modalPlantillasSms" class="modal fade" tabindex="-1" role="dialog"
+        aria-labelledby="modalPlantillasSmsLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header modal-colored-header bg-primary">
@@ -251,9 +298,10 @@
                                     <div class="form-group">
                                         <div class="form-check form-check-inline">
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="activePlantillaSms"
-                                                name="activePlantillaSms" checked>
-                                                <label class="custom-control-label" for="activePlantillaSms">Activo</label>
+                                                <input type="checkbox" class="custom-control-input"
+                                                    id="activePlantillaSms" name="activePlantillaSms" checked>
+                                                <label class="custom-control-label"
+                                                    for="activePlantillaSms">Activo</label>
                                             </div>
                                         </div>
                                     </div>
@@ -273,4 +321,5 @@
         </div>
     </div>
 </form>
+
 <script src="js/sms.js"></script>

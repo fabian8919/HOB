@@ -1,4 +1,75 @@
 <style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: #f1f1f1;
+    }
+
+    #formVozMasivo {
+        background-color: #ffffff;
+        margin: 100px auto;
+        padding: 40px;
+        width: 70%;
+        min-width: 300px;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    input {
+        padding: 10px;
+        width: 100%;
+        font-size: 17px;
+        border: 1px solid #aaaaaa;
+    }
+
+    input.invalid {
+        background-color: #f5cece;
+    }
+
+    .tabSteps {
+        display: none;
+    }
+
+    button {
+        background-color: #04AA6D;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 17px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        opacity: 0.8;
+    }
+
+    #prevBtn {
+        background-color: #bbbbbb;
+    }
+
+    .step {
+        height: 15px;
+        width: 15px;
+        margin: 0 2px;
+        background-color: #bbbbbb;
+        border: none;
+        border-radius: 50%;
+        display: inline-block;
+        opacity: 0.5;
+    }
+
+    .step.active {
+        opacity: 1;
+    }
+
+    .step.finish {
+        background-color: #04AA6D;
+    }
+
     .tabcontent {
         display: none;
         padding: 6px 12px;
@@ -13,11 +84,15 @@
         from {
             opacity: 0;
         }
+
         to {
             opacity: 1;
         }
     }
 </style>
+
+<script src="assets/libs/papaparse/papaparse.js"></script>
+
 <div class="page-breadcrumb">
     <h1>Mensajes de Voz</h1>
 </div>
@@ -73,32 +148,101 @@
                         </div>
                     </div>
                     <div id="crearproceso" class="tabcontent">
-                        <div class="row">
-                            <div id="divProces" class="mx-auto">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <form action="/sms/masivo/" method="post" id="formSmsMasivo">
-                                            <div>
-                                                <label for="nombreProceso">Procesamiento de mensajes de voz - Voz</label>
-                                                <input type="text" class="form-control" id="nombreProceso" name="nombreProceso" placeholder="Ingrese el nombre del proceso" />
-                                            </div>
-                                            <div>
-                                                <label for="baseDeDatos">Cargar base de datos</label>
-                                                <br>
-                                                <small>* Recuerde que la base de datos debe estar en formato .CSV. Es obligatorio que la base de datos tenga la columna celular.</small>
-                                                <input type="file" class="form-control" id="baseDeDatos" name="baseDeDatos" placeholder="Ingrese el nombre del proceso" />
-                                            </div>
-                                        </form>
-                                        <div class="py-2">
-                                            <i style="color:blueviolet;font-size: 30px;" class="fas fa-arrow-alt-circle-left"></i>
+                        <form id="formVozMasivo" method="post">
+                            <div class="tabSteps">
+                                <h1>Información del proceso</h1>
+                                <br>
+                                <p><input placeholder="Ingrese el nombre del proceso" oninput="this.className = ''"
+                                        id="nombreProceso" name="nombreProceso"></p>
+                            </div>
+                            <div class="tabSteps">
+                                <h1>Base de datos:</h1>
+                                <br>
+                                <small>* Recuerde que la base de datos debe estar en formato .CSV. Es obligatorio que la
+                                    base de datos tenga la columna celular.</small>
+                                <p><input type="file" class="form-control" id="baseDeDatos" name="baseDeDatos"
+                                        accept=".csv" /></p>
+                            </div>
+                            <div class="tabSteps">
+                                <h1>Mensaje</h1>
+                                <br>
+                                <p>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="selectPlantilla">Plantilla:</label>
+                                            <select id="selectPlantilla" class="form-control">
+                                                <option value="">Seleccione</option>
+                                            </select>
                                         </div>
-                                        <div class="py-2">
-                                            <i style="color:blueviolet;font-size: 30px;" class="fas fa-arrow-alt-circle-right"></i>
+                                        <div class="col-md-6">
+                                            <label for="selectCampana">Campaña:</label>
+                                            <select id="selectCampana" class="form-control">
+                                                <option value="">Seleccione</option>
+                                            </select>  
                                         </div>
                                     </div>
+                                </p>
+                                <p>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="headersDIV">Encabezados disponibles en la base de datos:</label>
+                                            <div id="headersDIV">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            
+                                        </div>
+                                    </div>
+                                </p>
+                                <small>* El mensaje que ingrese se enviará a toda la base de datos, recuerde
+                                    personalizarlo o seleccionar un mensaje predeterminado de una plantilla.</small>
+                                <p><textarea class="form-control" id="mensajeProceso" name="mensajeProceso"
+                                        placeholder="Ingrese el nombre del proceso" rows="5" columns="21"
+                                        onkeyup="_Voz.countCharacter(this);" onchange="_Voz.countCharacter(this);"
+                                        required></textarea></p>
+                                <small>Cantidad de caracteres: <span id="cantCharacter">0</span></small>
+                            </div>
+                            <div class="tabSteps">
+                                <h1>Previsualizar Mensaje:</h1>
+                                <ul class="chat-list list-style-none p-3" style="background-color: gainsboro;">
+                                    <li class="chat-item list-style-none mt-3">
+                                        <div class="chat-content d-inline-block pl-3">
+                                            <h6 class="font-weight-medium">Tienes un nuevo mensaje:</h6>
+                                            <div id="msgPrev" class="msg p-2 d-inline-block mb-1"></div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <small>Recuerde que la presencia de caracteres especiales como tildes podrian afectar la
+                                    recepcion del mensaje.</small>
+                            </div>
+                            <div class="tabSteps">
+                                <h1>Resumen</h1>
+                                <p>Nombre del cargue:
+                                    <input type="text" class="form-control" id="nombreProcesoP" disabled />
+                                </p>
+                                <p>Base de datos:
+                                    <input type="text" class="form-control" id="nombreDataBase" disabled />
+                                </p>
+                                <p>Cantidad: <b><span id="cantidadDataBase"></span></b></p>
+                                <p>Mensaje:
+                                    <textarea class="form-control" id="mensajeProcesoBef" name="mensajeProcesoBef"
+                                            rows="5" columns="21" disabled></textarea>
+                                </p>
+                                <small>Si da clic en siguiente iniciara el procesamiento de su base de datos.</small>
+                            </div>
+                            <div style="overflow:auto;">
+                                <div style="float:right;">
+                                    <button type="button" id="prevBtn" onclick="_Voz.nextPrev(-1)">Atr&aacute;s</button>
+                                    <button type="button" id="nextBtn" onclick="_Voz.nextPrev(1)">Siguiente</button>
                                 </div>
                             </div>
-                        </div>
+                            <div style="text-align:center;margin-top:20px;">
+                                <span class="step"></span>
+                                <span class="step"></span>
+                                <span class="step"></span>
+                                <span class="step"></span>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
