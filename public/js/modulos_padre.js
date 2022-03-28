@@ -86,8 +86,8 @@ var _ModulosPadre = (function () {
                 $('#ModulosPadre_nombre').val('');
                 $('#modalModulosPadre').modal('hide');
                 if (r) {
-                    _Globals.alertProcess("success", "Bien!", "El proceso fue exitoso.");
                     _ModulosPadre.drawTable();
+                    _Globals.alertProcess("success", "Bien!", "El proceso fue exitoso.");
                 } else {
                     _Globals.alertProcess("error", "Error!", "El proceso ha fallado.");
                 }

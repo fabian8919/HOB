@@ -96,10 +96,10 @@ var _Modulos = (function () {
                 $('#modalModulos').modal('hide');
                 if (r) {
                     _Globals.alertProcess("success", "Bien!", "El proceso fue exitoso.");
-                    _Modulos.drawTable();
                 } else {
                     _Globals.alertProcess("error", "Error!", "El proceso ha fallado.");
                 }
+                _Modulos.drawTable();
             }  
         });
     }

@@ -86,11 +86,11 @@ var _Permisos = (function () {
                 $('#Permisos_nombre').val('');
                 $('#modalPermisos').modal('hide');
                 if (r) {
-                    _Permisos.drawTable();
                     _Globals.alertProcess("success", "Bien!", "El proceso fue exitoso.");
                 } else {
                     _Globals.alertProcess("error", "Error!", "El proceso ha fallado.");
                 }
+                _Permisos.drawTable();
             }  
         });
     }

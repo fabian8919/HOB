@@ -10,6 +10,7 @@ const app = express();
 const session = require("express-session");
 const Sequelize = require('sequelize');
 const mailer = require('nodemailer');
+const fileupload = require("express-fileupload");
 
 global.chatbot = new Sequelize(process.env.DATEBASE_NAME, process.env.DATEBASE_USER, process.env.DATEBASE_PASS, {
     host: process.env.DATEBASE_HOST,
@@ -31,6 +32,7 @@ chatbot.authenticate()
 /* Use Json */
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(fileupload());
 
 /* Conectando el servidor a las sesiones */
 app.use(session({
@@ -55,6 +57,7 @@ app.use('/', require('./controller/modulosPadre'));
 app.use('/', require('./controller/login'));
 app.use('/', require('./controller/sms'));
 app.use('/', require('./controller/voz'));
+app.use('/', require('./controller/stickers'));
 
 /* Correo */
 global.transpotmail = mailer.createTransport({
