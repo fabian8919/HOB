@@ -1,24 +1,6 @@
-const log = console.log;
-const express = require('express');
-const app = express();
 const _ = require('lodash');
-const colors = require('colors');
-const red = colors.red;
-const yellow = colors.yellow;
-const cyan = colors.cyan;
-const green = colors.green;
-const Sequelize = require('sequelize');
-const session = require("express-session");
-const webp = require('webp-converter');
 const fs = require('fs');
 const sharp = require('sharp');
-
-/* Conectando el servidor a las sesiones */
-app.use(session({
-    secret: process.env.SESSION_KEY,
-    saveUninitialized: true,
-    resave: false,
-}));
 
 var fns = module.exports = {
     CrearPaquete: async function (data, clienteSelec) {
@@ -117,6 +99,28 @@ var fns = module.exports = {
             }
         );
     },
+
+    eliminarSticker: async function (data) {
+        return new Promise(
+            (resolve, reject) => {
+                chatbot.query(process.env.DATEBASE_ENCODING + "DELETE FROM relacion_paquetes_stickers WHERE id_sticker = ? RETURNING id", {
+                    replacements: [data.id]
+                }).then(([deleteSticker]) => {
+                    if(_.size(deleteSticker) > 0){
+                        chatbot.query(process.env.DATEBASE_ENCODING + "DELETE FROM stickers WHERE id = ?", {
+                            replacements: [data.id]
+                        }).then(([Delpa]) => {
+                            fs.unlinkSync(`public/${data.ruta}`);
+                            resolve(true);
+                        });
+                    } else {
+                        resolve(false);
+                    }
+                }); 
+            }
+        );
+    },
+
     CargarStickers: async function (id, arrayfiles, clienteSelec) {
         return new Promise(
             (resolve, reject) => {
@@ -138,22 +142,24 @@ var fns = module.exports = {
     },
 
     subirSticker: function (path, data, name, idPaquete) {
-        sharp(data)
-        .resize(512, 512)
-        .webp()
-        .toFile(`${path}/${name}.webp`, (error, resp) =>{
-            if(!error){
-                var newRuta = path.replace('public/', '');
-                chatbot.query(process.env.DATEBASE_ENCODING + "INSERT INTO stickers(nombre, ruta) VALUES (?, ?) RETURNING id", {
-                    replacements: [name, `${newRuta}/${name}.webp`]
-                }).then(([insertSticker]) => {
-                    if(_.size(insertSticker) == 1){
-                        chatbot.query(process.env.DATEBASE_ENCODING + "INSERT INTO relacion_paquetes_stickers(id_sticker, id_paquete) VALUES (?, ?)", {
-                            replacements: [insertSticker[0].id, idPaquete]
-                        })
-                    }
-                }); 
-            }
-        });
+        if (fs.existsSync(`${path}/${name}.webp`) != true) {      
+            sharp(data)
+            .resize(512, 512)
+            .webp()
+            .toFile(`${path}/${name}.webp`, (error, resp) =>{
+                if(!error){
+                    var newRuta = path.replace('public/', '');
+                    chatbot.query(process.env.DATEBASE_ENCODING + "INSERT INTO stickers(nombre, ruta) VALUES (?, ?) RETURNING id", {
+                        replacements: [name, `${newRuta}/${name}.webp`]
+                    }).then(([insertSticker]) => {
+                        if(_.size(insertSticker) == 1){
+                            chatbot.query(process.env.DATEBASE_ENCODING + "INSERT INTO relacion_paquetes_stickers(id_sticker, id_paquete) VALUES (?, ?)", {
+                                replacements: [insertSticker[0].id, idPaquete]
+                            })
+                        }
+                    }); 
+                }
+            });
+        }
     }
 }

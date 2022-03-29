@@ -182,9 +182,9 @@ var _Stickers = (function () {
             contentType: false,
             success: function(res) {
                 if(res){
+                    setTimeout(() =>{_Stickers.mostrarStickers(idPaquete)}, 2000);
                     _Globals.alertProcess("success", "Bien!", "Proceso Finalizado.");
                     $("#modal_cargar_stickers").modal("hide");
-                    _Stickers.mostrarStickers(idPaquete);
                 }
             },       
             error: function(res) {
@@ -194,7 +194,6 @@ var _Stickers = (function () {
     }
 
     var mostrarStickers = (idPaquete) =>{
-        console.log(idPaquete)
         $.ajax({
             type:"POST",
             url: "/stickers/extraerStickers/",
@@ -207,12 +206,12 @@ var _Stickers = (function () {
             },
             success:function(r){
                 var data = JSON.parse(r);
-                console.log(data)
                 if(data){
                     $.each(data,function(i,e){
                         
                         var stickers = '<div class="col-md-3">'+
-                            '<img class="img-responsive" style="max-width: 50% !important;margin: 5px;" alt="'+e.nombre+'" src="'+e.ruta+'" >'+
+                            '<a class="remove-image" href="#" style="display: inline;" onclick="_Stickers.deleteSticker('+e.id+')" id="'+e.id+'" data-paquetestick="'+idPaquete+'" data-pathstick="'+e.ruta+'" >&#215;</a>'+
+                            '<img class="img-responsive" style="max-width: 80% !important;margin: 5px;" alt="'+e.nombre+'" src="'+e.ruta+'" >'+
                         '</div>';
     
                         $("#panelStickers").append(stickers);
@@ -225,13 +224,51 @@ var _Stickers = (function () {
         });
     }
 
+    var deleteSticker = (id) => {
+        var data = document.getElementById(id);
+        var path = data.dataset.pathstick;
+        var paquete = data.dataset.paquetestick;
+        Swal.fire({
+            title: 'Estás Seguro?',
+            text: "Se eliminará el sticker definitivamente!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, Eliminar!'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type:"POST",
+                    url: "/stickers/eliminarSticker/",
+                    data:{
+                        "id":id,
+                        "ruta": path
+                    },
+                    beforeSend: function(){
+                        _Globals.alertWait();
+                    },
+                    success:function(r){
+                        if (!r) {
+                            _Globals.NotifyError("El proceso ha fallado.");
+                        } else {
+                            _Stickers.mostrarStickers(paquete);
+                            _Globals.alertProcess("success", "Bien!", "El sticker se eliminó con exito.");
+                        }
+                    }
+                });  
+            }
+        });
+    }
+
     return {
         paquetes_stickers:paquetes_stickers,
         drawTable:drawTable,
         eliminarPaquete:eliminarPaquete,
         modalEditPaquete:modalEditPaquete,
         CargarStickers:CargarStickers,
-        mostrarStickers:mostrarStickers
+        mostrarStickers:mostrarStickers,
+        deleteSticker:deleteSticker
     }
     
 })(jQuery);
