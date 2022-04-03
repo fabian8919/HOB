@@ -1,10 +1,13 @@
 var regDateBase = "";
 var headers = "";
+var dataPlantillasSms = "";
+var dataCampanaSms = "";
 
 var _Sms = (function () {
     var currentTabSms = 0;
     var TableSms;
     var TablePlantillasSms;
+    var TableCampanasSms;
     var Notify160 = false;
     var Notify320 = false;
 
@@ -42,6 +45,17 @@ var _Sms = (function () {
         }
     ];
 
+    _columnsCampanasSms = [{
+        "width": "10%"
+    },
+    {
+        "width": "80%"
+    },
+    {
+        "width": "10%"
+    }
+];
+
     TableSms = $("#tableSms").DataTable({
         pagingType: "numbers",
         language: lang_dataTable,
@@ -73,6 +87,22 @@ var _Sms = (function () {
         ]
     });
 
+    TableCampanasSms = $("#tableCampannasSms").DataTable({
+        pagingType: "numbers",
+        language: lang_dataTable,
+        autoWidth: false,
+        searching: true,
+        select: true,
+        ordering: true,
+        paging: true,
+        destroy: true,
+        pageLength: 10,
+        columns: _columnsCampanasSms,
+        order: [
+            [1, 'asc']
+        ]
+    });
+
     var managerView = (evt, name) => {
 
         var i, tabcontent, tablinks;
@@ -99,7 +129,15 @@ var _Sms = (function () {
         $('#graficarLop').attr('hidden', false);
     }
 
+    
     var listarPlantillasSms = () => {
+
+        $('#mensajeProceso').val("")
+        $('#mensajeProceso').html("")
+        $('#mensajeProceso').attr('disabled', false);
+        $('#mensajeProceso').focus();
+        $('#mensajeProceso').trigger('click');
+
         $.ajax({
             type: "POST",
             url: "/sms/listarPlantillas/",
@@ -111,7 +149,13 @@ var _Sms = (function () {
                 _Globals.alertWait();
             },
             success: function (r) {
+
+                $('#selectPlantilla').empty();
+                $('#selectPlantilla').append('<option value="">Seleccione</option>');
+
                 var data = JSON.parse(r);
+                dataPlantillasSms = data;
+
                 $.each(data, function (i, e) {
                     let iconActivo = '';
 
@@ -127,8 +171,50 @@ var _Sms = (function () {
                         e.contenido,
                         iconActivo
                     ]);
+                    $('#selectPlantilla').append('<option value="'+ e.id+ '">'+e.nombre_plantilla+'</option>');
                 });
                 TablePlantillasSms.draw();
+                Swal.close();
+            }
+        });
+    }
+
+    var listarCampanasSms = () => {
+
+        $.ajax({
+            type: "POST",
+            url: "/sms/listarCampanas/",
+            beforeSend: function () {
+                $('#idCampanaSms').val('');
+                $('#nombre_campana').val('');
+                TableCampanasSms.rows().clear().draw();
+                _Globals.alertWait();
+            },
+            success: function (r) {
+
+                $('#selectCampana').empty();
+                $('#selectCampana').append('<option value="">Seleccione</option>');
+
+                var data = JSON.parse(r);
+                dataCampanaSms = data;
+
+                $.each(data, function (i, e) {
+                    let iconActivo = '';
+
+                    if (e.activo == true) {
+                        iconActivo = '<i class="fas fa-toggle-on fa-lg"></i>';
+                    } else {
+                        iconActivo = '<i class="fas fa-toggle-off fa-lg"></i>';
+                    }
+
+                    TableCampanasSms.row.add([
+                        e.id,
+                        e.nombre_campana,
+                        iconActivo
+                    ]);
+                    $('#selectCampana').append('<option value="'+ e.id+ '">'+e.nombre_campana+'</option>');
+                });
+                TableCampanasSms.draw();
                 Swal.close();
             }
         });
@@ -218,6 +304,89 @@ var _Sms = (function () {
         );
     };
 
+    var createCampana = () => {
+        (async () => {
+            var dataString = $('#form-CampannasSms').serialize();
+            let nombre = $("#nombre_campana").val();
+            var validar = await validarCampanaExiste(nombre.toUpperCase());
+
+            if (validar == false) {
+                $.ajax({
+                    type: "POST",
+                    url: "/sms/CreateCampana/",
+                    data: dataString,
+                    beforeSend: function () {
+                        _Globals.alertWait();
+                    },
+                    success: function (r) {
+                        $('#idCampanaSms').val('');
+                        $('#nombre_campana').val('');
+                        if (r) {
+                            _Globals.alertProcess("success", "Bien!", "La campaña fue creada.");
+                            _Sms.listarCampanasSms();
+                        } else {
+                            _Globals.alertProcess("error", "Error!", "El proceso ha fallado.");
+                        }
+                    }
+                });
+            } else {
+                Swal.fire({
+                    title: 'Estás Seguro?',
+                    text: "Se actualizará la campaña!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, Actualizar!'
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/sms/UpdateCampana/",
+                            data: dataString,
+                            beforeSend: function () {
+                                _Globals.alertWait();
+                            },
+                            success: function (r) {
+                                if (!r) {
+                                    _Globals.NotifyError("El proceso ha fallado.");
+                                } else {
+                                    _Sms.listarCampanasSms();
+                                    _Globals.alertProcess("success", "Bien!", "La campaña se actualizó con éxito.");
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        })();
+    }
+
+    var validarCampanaExiste = async (nombre) => {
+        return new Promise(
+            (resolve, reject) => {
+                $.ajax({
+                    type: "POST",
+                    url: "/sms/existeCampana/",
+                    data: {
+                        "nombre": nombre
+                    },
+                    beforeSend: function () {
+                        _Globals.alertWait();
+                    },
+                    success: function (r) {
+                        var data = JSON.parse(r);
+                        if (data == 'existe') {
+                            resolve(true);
+                            return false;
+                        }
+                        resolve(false);
+                    }
+                });
+            }
+        );
+    };
+
     var setPlantillaSeleccionada = (data) => {
         $('#idPlantillaSms').val(data[0]);
         $('#nombres_plantilla').val(data[1]);
@@ -229,6 +398,19 @@ var _Sms = (function () {
 
         if (data[3].indexOf('toggle-off') !== -1) {
             document.getElementById("activePlantillaSms").checked = false;
+        }
+    }
+
+    var setCampanaSeleccionada = (data) => {
+        $('#idCampanaSms').val(data[0]);
+        $('#nombre_campana').val(data[1]);
+
+        if (data[2].indexOf('toggle-on') !== -1) {
+            document.getElementById("activeCampanasSms").checked = true;
+        }
+
+        if (data[2].indexOf('toggle-off') !== -1) {
+            document.getElementById("activeCampanasSms").checked = false;
         }
     }
 
@@ -260,8 +442,6 @@ var _Sms = (function () {
         x[currentTabSms].style.display = "none";
         currentTabSms = currentTabSms + n;
         if (currentTabSms >= x.length) {
-            $('#nextBtn').removeAttr('onclick');
-            $('#nextBtn').attr('type', 'submit');
             return false;
         }
         managerSteps(currentTabSms);
@@ -281,6 +461,10 @@ var _Sms = (function () {
         for (j = 0; j < t.length; j++) {
             if (t[j].value == "") {
                 _Globals.NotifyError("El mensaje no puede estar vacio.");
+                valid = false;
+            }
+            if($('#selectCampana').val() == ""){
+                _Globals.NotifyError("Debe seleccionar una campaña.");
                 valid = false;
             }
         }
@@ -312,7 +496,7 @@ var _Sms = (function () {
         }
     }
 
-    var countCharacter = (obj)=>{
+    var countCharacter = (obj) => {
         var strLength = obj.value.length;
         $('#cantCharacter').html(strLength);
         if(strLength > 160 && !Notify160){
@@ -328,7 +512,7 @@ var _Sms = (function () {
     var displayHTMLTable = (r) => {
         
         var cantidadDataBase = r.data.length - 1;
-        $('#cantidadDataBase').html(cantidadDataBase);
+        $('#cantidadDataBase').val(cantidadDataBase);
         $('#nombreDataBase').val($('#baseDeDatos').val().split("\\").pop());
         
         if(Array.isArray(r.data[0])) {
@@ -377,6 +561,33 @@ var _Sms = (function () {
         
     }
 
+    var refreshMensajeProcess = ()=>{
+        /* Crando variables iniciales */
+        var msgIni = $('#mensajeProceso').val();
+        var msgBef = "";
+        var camposMsg = [];
+        var msg = msgIni.split("{{");
+        
+        for (var i = 1; i < msg.length; i++) {
+            camposMsg.push(msg[i].split("}}")[0]);
+        }
+
+        for (var j = 0; j < camposMsg.length; j++) {
+            for (var e = 0; e < headers.length; e++) {
+                if(camposMsg[j] == headers[e]){
+                    if(msgBef == ""){
+                        msgBef = msgIni.replaceAll("{{"+camposMsg[j]+"}}", regDateBase[e]);
+                    } else {
+                        msgBef = msgBef.replaceAll("{{"+camposMsg[j]+"}}", regDateBase[e]);
+                    }
+                }
+            }
+        }
+        
+        $('#msgPrev').html((!msgBef) ? msgIni : msgBef);
+        $('#mensajeProcesoBef').html((!msgBef) ? msgIni : msgBef);
+    }
+
 
     return {
         listarPlantillasSms: listarPlantillasSms,
@@ -389,14 +600,22 @@ var _Sms = (function () {
         displayHTMLTable: displayHTMLTable,
         addHeaderMsg: addHeaderMsg,
         countCharacter: countCharacter,
-        procesarMasivoSms: procesarMasivoSms
+        procesarMasivoSms: procesarMasivoSms,
+        refreshMensajeProcess: refreshMensajeProcess,
+        listarCampanasSms: listarCampanasSms,
+        createCampana: createCampana,
+        validarCampanaExiste: validarCampanaExiste,
+        setCampanaSeleccionada: setCampanaSeleccionada
     }
 
 })(jQuery);
 
 $(document).ready(function () {
+
     var currentTabSms = 0;
     _Sms.managerSteps(currentTabSms);
+    _Sms.listarPlantillasSms();
+    _Sms.listarCampanasSms();
 
     document.getElementById("estaSms").click();
 
@@ -404,9 +623,18 @@ $(document).ready(function () {
         _Sms.listarPlantillasSms();
     })
 
+    $('#modalCampannasSms').on('shown.bs.modal', function (e) {
+        _Sms.listarCampanasSms();
+    })
+
     $('#form-plantillasSms').on('submit', (e) => {
         e.preventDefault();
         _Sms.createPlantilla();
+    });
+
+    $('#form-CampannasSms').on('submit', (e) => {
+        e.preventDefault();
+        _Sms.createCampana();
     });
 
     $('#formSmsMasivo').on('submit', (e) => {
@@ -418,6 +646,12 @@ $(document).ready(function () {
         var table = $('#tablePlantillasSms').DataTable();
         var data = table.row(this).data();
         _Sms.setPlantillaSeleccionada(data);
+    });
+
+    $('#tableCampannasSms tbody').on('click', 'tr', function () {
+        var table = $('#tableCampannasSms').DataTable();
+        var data = table.row(this).data();
+        _Sms.setCampanaSeleccionada(data);
     });
 
     $('#crearProc').on('click', () => {
@@ -448,36 +682,35 @@ $(document).ready(function () {
     });
 
     $('#mensajeProceso').on('blur', () => {
-        
-        /* Crando variables iniciales */
-        var msgIni = $('#mensajeProceso').val();
-        var msgBef = "";
-        var camposMsg = [];
-        var msg = msgIni.split("{{");
-        
-        for (var i = 1; i < msg.length; i++) {
-            camposMsg.push(msg[i].split("}}")[0]);
-        }
-
-        for (var j = 0; j < camposMsg.length; j++) {
-            for (var e = 0; e < headers.length; e++) {
-                if(camposMsg[j] == headers[e]){
-                    if(msgBef == ""){
-                        msgBef = msgIni.replaceAll("{{"+camposMsg[j]+"}}", regDateBase[e]);
-                    } else {
-                        msgBef = msgBef.replaceAll("{{"+camposMsg[j]+"}}", regDateBase[e]);
-                    }
-                }
-            }
-        }
-        
-        $('#msgPrev').html((!msgBef) ? msgIni : msgBef);
-        $('#mensajeProcesoBef').html((!msgBef) ? msgIni : msgBef);
+        _Sms.refreshMensajeProcess();
     });
 
     $('#nombreProceso').on('blur', () => {
         $('#nombreProcesoP').val($('#nombreProceso').val());
     });
     
+    $('#selectPlantilla').on('change', ()=>{
+        var position = document.getElementById("selectPlantilla").options.selectedIndex - 1;
+        $('#mensajeProceso').val('');
+        $('#plantillaSmsS').val('Sin plantilla seleccionada');
+        $('#mensajeProceso').html('');
+        if($('#selectPlantilla').val() != ""){
+            $('#mensajeProceso').val(dataPlantillasSms[position].contenido);
+            $('#mensajeProceso').html(dataPlantillasSms[position].contenido);
+            $('#mensajeProceso').attr('disabled', true);
+        } else {
+            $('#mensajeProceso').attr('disabled', false);
+        }
+        $('#mensajeProceso').focus();
+        $('#mensajeProceso').trigger('click');
+        $('#plantillaSmsS').val(dataPlantillasSms[position].nombre_plantilla);
+        _Sms.refreshMensajeProcess();
+        var cant = $('#mensajeProceso').val().length;
+        $('#cantCharacter').html(cant);
+    });
 
+    $('#selectCampana').on('change', ()=>{
+        var position = document.getElementById("selectCampana").options.selectedIndex - 1;
+        $('#campanaSmss').val(dataCampanaSms[position].nombre_campana);
+    });
 });

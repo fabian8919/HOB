@@ -8,9 +8,23 @@ global.r.post('/sms/listarPlantillas/', (req, res) => {
     })();
 });
 
+global.r.post('/sms/listarCampanas/', (req, res) => {
+    (async ()=>{
+        let resp = await fns.listarCampanas(req.session.clienteSelec);
+        res.send(JSON.stringify(resp));
+    })();
+});
+
 global.r.post('/sms/existePlantilla/', (req, res) => {
     (async ()=>{
         let resp = await fns.existePlantilla(req.body, req.session.clienteSelec);
+        res.send(JSON.stringify(resp));
+    })();
+});
+
+global.r.post('/sms/existeCampana/', (req, res) => {
+    (async ()=>{
+        let resp = await fns.existeCampana(req.body, req.session.clienteSelec);
         res.send(JSON.stringify(resp));
     })();
 });
@@ -22,9 +36,23 @@ global.r.post('/sms/CreatePlantilla/', (req, res) => {
     })();
 });
 
+global.r.post('/sms/CreateCampana/', (req, res) => {
+    (async ()=>{
+        let resp = await fns.CreateCampana(req.body, req.session.clienteSelec);
+        res.send(JSON.stringify(resp));
+    })();
+});
+
 global.r.post('/sms/UpdatePlantilla/', (req, res) => {
     (async ()=>{
         let resp = await fns.UpdatePlantilla(req.body, req.session.clienteSelec);
+        res.send(JSON.stringify(resp));
+    })();
+});
+
+global.r.post('/sms/UpdateCampana/', (req, res) => {
+    (async ()=>{
+        let resp = await fns.UpdateCampana(req.body, req.session.clienteSelec);
         res.send(JSON.stringify(resp));
     })();
 });

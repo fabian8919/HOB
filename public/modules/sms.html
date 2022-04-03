@@ -113,6 +113,9 @@
                                 <button type="button" class="tablinks btn btn-warning btn-rounded" data-toggle="modal"
                                     data-target="#modalPlantillasSms">
                                     <i class="fas fa-columns"></i> Plantillas</button>
+                                <button type="button" class="tablinks btn btn-dark btn-rounded" data-toggle="modal"
+                                    data-target="#modalCampannasSms">
+                                    <i class="fas fa-tachometer-alt"></i> Campañas</button>
                                 <button type="button" onclick="_Sms.cancelProceso(event)"
                                     class="tablinks btn btn-danger btn-rounded" id="cancelproceso" hidden>
                                     <i class="fas fa-trash"></i> Cancelar</button>
@@ -168,17 +171,30 @@
                                 <br>
                                 <p>
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <label for="selectPlantilla">Plantilla:</label>
-                                            <select id="selectPlantilla" class="form-control">
-                                                <option value="">Seleccione</option>
+                                            <select id="selectPlantilla" name="selectPlantilla" class="form-control" required>
                                             </select>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-2 mt-2 pt-4">
+                                           <a href="javascript:void(0)">
+                                                <span data-toggle="modal" data-target="#modalPlantillasSms" style="font-size: 25px; color:#04AA6D;">
+                                                    <i class="fas fa-plus-circle"></i>
+                                                </span>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-4">
                                             <label for="selectCampana">Campaña:</label>
-                                            <select id="selectCampana" class="form-control">
+                                            <select id="selectCampana" class="form-control" required>
                                                 <option value="">Seleccione</option>
                                             </select>  
+                                        </div>
+                                        <div class="col-md-2 mt-2 pt-4">
+                                            <a href="javascript:void(0)">
+                                                <span data-toggle="modal" data-target="#modalCampannasSms" style="font-size: 25px; color:#04AA6D;">
+                                                    <i class="fas fa-plus-circle"></i>
+                                                </span>
+                                            </a>
                                         </div>
                                     </div>
                                 </p>
@@ -217,18 +233,41 @@
                             </div>
                             <div class="tabSteps">
                                 <h1>Resumen</h1>
-                                <p>Nombre del cargue:
-                                    <input type="text" class="form-control" id="nombreProcesoP" disabled />
-                                </p>
-                                <p>Base de datos:
-                                    <input type="text" class="form-control" id="nombreDataBase" disabled />
-                                </p>
-                                <p>Cantidad: <b><span id="cantidadDataBase"></span></b></p>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p>Nombre del cargue:
+                                            <input type="text" class="form-control" id="nombreProcesoP" disabled />
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p>Base de datos:
+                                            <input type="text" class="form-control" id="nombreDataBase" disabled />
+                                        </p>        
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p>Cantidad:
+                                            <input type="text" class="form-control" id="cantidadDataBase" disabled />
+                                        </p>        
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p>Plantilla:
+                                            <input type="text" class="form-control" id="plantillaSmsS" value="Sin plantilla seleccionada" disabled />
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p>Campaña:
+                                            <input type="text" class="form-control" id="campanaSmss" value="Sin plantilla campaña" disabled />
+                                        </p>
+                                    </div>
+                                </div>
                                 <p>Mensaje:
                                     <textarea class="form-control" id="mensajeProcesoBef" name="mensajeProcesoBef"
                                             rows="5" columns="21" disabled></textarea>
                                 </p>
-                                <small>Si da clic en siguiente iniciara el procesamiento de su base de datos.</small>
+                                <small>Si da clic en "Procesar" iniciara el procesamiento de su base de datos.</small>
                             </div>
                             <div style="overflow:auto;">
                                 <div style="float:right;">
@@ -307,6 +346,70 @@
                                     </div>
                                 </div>
                                 <input type="hidden" id="idPlantillaSms" name="idPlantillaSms">
+                                <div class="col-md-12">
+                                    <input type="submit" value="Guardar Cambios" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="form-CampannasSms" method="post">
+    <div id="modalCampannasSms" class="modal fade" tabindex="-1" role="dialog"
+        aria-labelledby="modalCampannasSmsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header modal-colored-header bg-primary">
+                    <h4 class="modal-title" id="modalCampannasSmsLabel">Campañas</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="modal-body-sm" class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="table-responsive">
+                                    <table class="table" id="tableCampannasSms"
+                                        class="table table-striped table-bordered no-wrap">
+                                        <thead class="bg-primary text-white">
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Nombre</th>
+                                                <th>Activo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="border border-primary">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="nombre_campana">Nombre:</label>
+                                        <input class="form-control" type="text" id="nombre_campana"
+                                            name="nombre_campana" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-right">
+                                    <div class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input"
+                                                    id="activeCampanasSms" name="activeCampanasSms" checked>
+                                                <label class="custom-control-label"
+                                                    for="activeCampanasSms">Activo</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="idCampanaSms" name="idCampanaSms">
                                 <div class="col-md-12">
                                     <input type="submit" value="Guardar Cambios" class="btn btn-primary" />
                                 </div>

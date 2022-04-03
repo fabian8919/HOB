@@ -71,7 +71,7 @@ var _Stickers = (function () {
     var paquetes_stickers = () => {
         var dataString = $('#form-paquetes_stickers').serialize();
         
-        if($('#paquetes_stickers_nombre').val() == '1'){
+        if($('#opcion_paquete').val() == '1'){
             $.ajax({
                 type: "POST",
                 url: "/stickers/CrearPaquete/",
@@ -90,6 +90,7 @@ var _Stickers = (function () {
                         _Globals.alertProcess("warning", "Advertencia!", "El paquete ya existe.");
                         return false;
                     }
+                    _Stickers.mostrarStickers('0')
                     _Stickers.drawTable();
                 }  
             });

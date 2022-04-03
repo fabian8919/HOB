@@ -18,6 +18,21 @@ var fns = module.exports = {
             }
         );
     },
+    listarCampanas: async function (clienteSelec) {
+        return new Promise(
+            (resolve, reject) => {
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT * FROM campanas WHERE cod_cliente = ? ORDER BY id", {
+                    replacements: [clienteSelec]
+                }).then(([campanasData]) => {
+                    if(_.size(campanasData) > 0){
+                        resolve(campanasData)
+                    } else {
+                        resolve(false)
+                    }
+                });
+            }
+        );
+    },
     existePlantilla: async function (data, clienteSelec) {
         return new Promise(
             (resolve, reject) => {
@@ -25,6 +40,21 @@ var fns = module.exports = {
                     replacements: [data.nombre, clienteSelec]
                 }).then(([plantillasData]) => {
                     if(_.size(plantillasData) > 0){
+                        resolve('existe')
+                    } else {
+                        resolve('noexiste')
+                    }
+                });
+            }
+        );
+    },
+    existeCampana: async function (data, clienteSelec) {
+        return new Promise(
+            (resolve, reject) => {
+                chatbot.query(process.env.DATEBASE_ENCODING + "SELECT nombre_campana FROM campanas WHERE UPPER(nombre_campana) = ? AND cod_cliente = ?", {
+                    replacements: [data.nombre, clienteSelec]
+                }).then(([campanasData]) => {
+                    if(_.size(campanasData) > 0){
                         resolve('existe')
                     } else {
                         resolve('noexiste')
@@ -49,6 +79,22 @@ var fns = module.exports = {
             }
         );
     },
+    CreateCampana: async function (data, clienteSelec) {
+        return new Promise(
+            (resolve, reject) => {
+                var activo = (data.activeCampanasSms == "on") ? true : false;
+                chatbot.query(process.env.DATEBASE_ENCODING + "INSERT INTO campanas(nombre_campana, cod_cliente, activo) VALUES (?, ?, ?) RETURNING id", {
+                    replacements: [data.nombre_campana, clienteSelec, activo]
+                }).then(([insertCampana]) => {
+                    if(_.size(insertCampana) == 1){
+                        resolve(true)
+                    } else {
+                        resolve(false);
+                    }
+                });
+            }
+        );
+    },
     UpdatePlantilla: async function (data, clienteSelec) {
         return new Promise(
             (resolve, reject) => {
@@ -57,6 +103,22 @@ var fns = module.exports = {
                     replacements: [data.nombres_plantilla, data.mensajeSmsPlantilla, activo, data.idPlantillaSms, clienteSelec, 1]
                 }).then(([updatePlantilla]) => {
                     if(_.size(updatePlantilla) == 1){
+                        resolve(true)
+                    } else {
+                        resolve(false);
+                    }
+                });
+            }
+        );
+    },
+    UpdateCampana: async function (data, clienteSelec) {
+        return new Promise(
+            (resolve, reject) => {
+                var activo = (data.activeCampanasSms == "on") ? true : false;
+                chatbot.query(process.env.DATEBASE_ENCODING + "UPDATE campanas SET nombre_campana = ?, activo = ? WHERE id = ? AND cod_cliente = ? RETURNING id", {
+                    replacements: [data.nombre_campana, activo, data.idCampanaSms, clienteSelec]
+                }).then(([updateCampana]) => {
+                    if(_.size(updateCampana) == 1){
                         resolve(true)
                     } else {
                         resolve(false);

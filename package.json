@@ -21,6 +21,7 @@
     "fs": "0.0.1-security",
     "handlebars": "^4.7.7",
     "http": "0.0.1-security",
+    "https": "^1.0.0",
     "in_array": "^1.1.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-simple": "^0.5.6",
