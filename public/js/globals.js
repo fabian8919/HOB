@@ -36,7 +36,12 @@ var _Globals = (function () {
 })(jQuery);
 
 $(document).ready(function () {
+
     $('#logoutUser').on('click', ()=>{
         window.location.replace("/salir");
+    });
+
+    $('#seltnav').select2({
+        theme: 'bootstrap'
     });
 });
