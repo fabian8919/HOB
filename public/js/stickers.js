@@ -286,10 +286,13 @@ $(document).ready(function () {
         e.preventDefault();
         _Stickers.CargarStickers();
     });
+    var table = $('#TablePaquetesStickers').DataTable();
+    table.on( 'select', function ( e, dt, type, indexes ) {
+        var data = table.rows( indexes ).data().toArray();
+        _Stickers.mostrarStickers(data[0][1])
+    });
 
-    $('#TablePaquetesStickers tbody').on('click', 'tr', function () {
-        var table = $('#TablePaquetesStickers').DataTable();
-        var data = table.row( this ).data();
-        _Stickers.mostrarStickers(data[1])
+    table.on( 'deselect', function ( e, dt, type, indexes ) {
+        _Stickers.mostrarStickers('0')
     });
 });
