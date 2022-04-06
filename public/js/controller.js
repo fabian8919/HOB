@@ -89,5 +89,17 @@ $(document).ready(function () {
     if(localStorage.vista == 'index'){
         $('#indexSidebar').addClass("selected");
     }
+    $('#searchModules').select2({
+        theme: 'bootstrap4',
+        width: 'resolve',
+        dropdownAutoWidth : true
+    });
+
+    $('#searchModules').on('change', ()=>{
+        var vis = document.getElementById("searchModules").value;
+        if(vis != ''){
+            _Admin.traerVista(vis)
+        }
+    });
     _Admin.traerVista(vista);
 });

@@ -112,14 +112,20 @@
             <ul class="navbar-nav float-right">
                 <li class="nav-item d-none d-md-block">
                     <a class="nav-link" href="javascript:void(0)">
-                        <form>
-                            <div class="customize-input">
-                                <select id="seltnav">
-                                    <option>selcccione</option>
-                                </select>
-                                
-                            </div>
-                        </form>
+                        <div class="customize-input" style="padding-top: 25px;">
+                            <select id="searchModules" class="form-select" data-placeholder="Buscar" data-allow-clear="1">
+                                <option></option>
+                                <% padres.forEach(function(pdr) { %>
+                                    <optgroup label="<%= pdr.padre %>">
+                                    <% modulos.forEach(function(hj) { %>
+                                        <% if(hj.padre == pdr.padre){ %>
+                                            <option value="<%= hj.namemol %>" ><%= hj.namemol %></option>
+                                        <% } %>
+                                    <% }); %>
+                                    </optgroup>
+                                <% }); %>
+                            </select>
+                        </div>
                     </a>
                 </li>
 
