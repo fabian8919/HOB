@@ -1,21 +1,4 @@
-const log = console.log;
-const express = require('express');
-const app = express();
 const _ = require('lodash');
-const colors = require('colors');
-const red = colors.red;
-const yellow = colors.yellow;
-const cyan = colors.cyan;
-const green = colors.green;
-const Sequelize = require('sequelize');
-const session = require("express-session");
-
-/* Conectando el servidor a las sesiones */
-app.use(session({
-    secret: process.env.SESSION_KEY,
-    saveUninitialized: true,
-    resave: false,
-}));
 
 var fns = module.exports = {
     modulos: async function (data) {
